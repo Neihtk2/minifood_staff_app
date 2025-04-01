@@ -20,10 +20,9 @@ class DishesController extends GetxController {
   Future<void> getDishes() async {
     try {
       isLoading.value = true;
-      // final List<DishedModel> req = await _repo.getDisheds(category);
-      mainDishes.value = await _repo.getDisheds('main');
-      dessertDishes.value = await _repo.getDisheds('dessert');
-      beverageDishes.value = await _repo.getDisheds('beverage');
+      mainDishes.value = await _repo.getDishes('main');
+      dessertDishes.value = await _repo.getDishes('dessert');
+      beverageDishes.value = await _repo.getDishes('beverage');
     } catch (e) {
       _handleError(e);
     } finally {
@@ -35,6 +34,7 @@ class DishesController extends GetxController {
     try {
       final response = await _repo.deleteDished(id);
       if (response.statusCode == 201 || response.statusCode == 200) {
+        getDishes();
         // clearForm();
         Get.back();
         Get.snackbar(

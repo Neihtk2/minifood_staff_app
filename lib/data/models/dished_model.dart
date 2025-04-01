@@ -4,6 +4,7 @@ class DishedModel {
   final int price;
   final String image;
   final String category;
+  int quantity;
 
   DishedModel({
     required this.id,
@@ -11,6 +12,7 @@ class DishedModel {
     required this.price,
     required this.image,
     required this.category,
+    this.quantity = 0,
   });
 
   factory DishedModel.fromJson(Map<String, dynamic> json) => DishedModel(
@@ -18,6 +20,7 @@ class DishedModel {
     name: json["name"],
     price: json["price"],
     image: json["image"],
-    category: json["category"],
+    category: json["category"] ?? "null",
+    quantity: json["quantity"] ?? 0,
   );
 }

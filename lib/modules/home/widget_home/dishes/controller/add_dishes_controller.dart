@@ -6,10 +6,13 @@ import 'package:get_storage/get_storage.dart';
 import 'package:minifood_admin/core/constants/storage_constants.dart';
 import 'package:minifood_admin/core/utils/push_image/pick_image.dart';
 import 'package:minifood_admin/data/reponsitories/dished_reponsitory.dart';
+import 'package:minifood_admin/modules/home/widget_home/dishes/controller/dishes_controller.dart';
 
 class DishController extends GetxController {
+  final dishesController = Get.find<DishesController>();
   final DishedReponsitoryImpl dishedReponsitoryImpl =
       DishedReponsitoryImpl.instance;
+  final RxString imageUpdate = ''.obs;
   final Rx<File?> selectedImage = Rx<File?>(null);
   final RxString category = ''.obs;
   final RxBool isLoading = false.obs;
@@ -25,9 +28,22 @@ class DishController extends GetxController {
     }
   }
 
-  Future<void> createDish() async {
-    // if (!isValidInput()) return;
+  Future<void> loadDishDetails(String dishId) async {
+    try {
+      isLoading.value = true;
+      final dish = await dishedReponsitoryImpl.getDishedbyId(dishId);
+      nameController.text = dish!.name;
+      priceController.text = dish.price.toString();
+      category.value = dish.category;
+      imageUpdate.value = dish.image;
+      isLoading.value = false;
+    } catch (e) {
+      isLoading.value = false;
+      Get.snackbar('Lỗi', 'Không thể tải dữ liệu món ăn');
+    }
+  }
 
+  Future<void> createDish() async {
     try {
       isLoading.value = true;
       final response = await dishedReponsitoryImpl.createDish(
@@ -38,11 +54,47 @@ class DishController extends GetxController {
         token: box.read(StorageConstants.accessToken),
       );
       if (response.statusCode == 201 || response.statusCode == 200) {
+        dishesController.getDishes();
         clearForm();
         Get.back();
         Get.snackbar(
           'Thành công',
           'Thêm món thành công',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      } else {
+        throw Exception(response.data['message'] ?? 'Lỗi không xác định');
+      }
+    } on DioException catch (e) {
+      final errorMessage = e.response?.data['message'] ?? e.message;
+      Get.snackbar(
+        'Lỗi API',
+        errorMessage,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> updateDish(String id) async {
+    try {
+      isLoading.value = true;
+      final response = await dishedReponsitoryImpl.updateDished(
+        id,
+        nameController.text.trim(),
+        int.parse(priceController.text.trim()),
+        category.value,
+        selectedImage.value,
+        box.read(StorageConstants.accessToken),
+      );
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        dishesController.getDishes();
+        clearForm();
+        Get.back();
+        Get.snackbar(
+          'Thành công',
+          'Cập nhật món thành công',
           snackPosition: SnackPosition.BOTTOM,
         );
       } else {

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:minifood_admin/core/routes/app_routes.dart';
-import 'package:minifood_admin/data/models/dished_model.dart';
+import 'package:minifood_admin/data/models/user_model.dart';
 import 'package:minifood_admin/modules/home/widget_home/dishes/controller/dishes_controller.dart';
 
-class CustomDataListView extends StatelessWidget {
-  final List<DishedModel> dishes;
-  const CustomDataListView({Key? key, required this.dishes}) : super(key: key);
+class DataUsersListView extends StatelessWidget {
+  final List<UserModel> users;
+  const DataUsersListView({Key? key, required this.users}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     DishesController controller = Get.find();
@@ -14,7 +13,7 @@ class CustomDataListView extends StatelessWidget {
       if (controller.isLoading.value) {
         return Center(child: CircularProgressIndicator());
       }
-      if (dishes.isEmpty) {
+      if (users.isEmpty) {
         return Center(
           child: Text(
             'Không có dữ liệu.',
@@ -23,17 +22,18 @@ class CustomDataListView extends StatelessWidget {
         );
       }
       return ListView.builder(
-        itemCount: dishes.length,
+        scrollDirection: Axis.vertical,
+        itemCount: users.length,
         padding: const EdgeInsets.all(8.0),
         itemBuilder: (context, index) {
-          final dish = dishes[index];
-          return _itemwidgetdishes(dish);
+          final user = users[index];
+          return _itemwidgetusers(user);
         },
       );
     });
   }
 
-  Widget _itemwidgetdishes(DishedModel dish) {
+  Widget _itemwidgetusers(UserModel user) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -41,15 +41,15 @@ class CustomDataListView extends StatelessWidget {
       child: InkWell(
         // Hiệu ứng nhấn
         borderRadius: BorderRadius.circular(12),
-        onTap: () => print(dish.image),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        onTap: () {},
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Image.network(
-              dish.image,
-
+              "https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg",
               height: 150,
-              width: double.infinity,
+              width: 150,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 debugPrint("Lỗi tải ảnh: $error");
@@ -67,17 +67,19 @@ class CustomDataListView extends StatelessWidget {
               },
             ),
             // Thông tin sản phẩm
-            Padding(
-              padding: EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Tên sản phẩm
-                  Row(
+            Expanded(
+              child: SizedBox(
+                height: 150,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Tên sản phẩm
                       Text(
-                        dish.name,
+                        user.email,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -85,36 +87,43 @@ class CustomDataListView extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      IconButton(
-                        icon: Icon(Icons.edit, size: 20),
-                        onPressed:
-                            () => Get.toNamed(
-                              RouterName.DISHED_UPDATE,
-                              arguments: dish.id,
+                      SizedBox(height: 4),
+                      // Đánh giá sao
+                      // Giá và nút mua
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            user.name,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
-                        padding: EdgeInsets.zero,
+                          ),
+                          Text(
+                            "id: ${user.id.toString()}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.delete, size: 20),
+                            onPressed: () => _confirmDelete(user.id.toString()),
+                            padding: EdgeInsets.zero,
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 4),
-                  // Đánh giá sao
-                  // Giá và nút mua
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        dish.price.toString() + " VNĐ",
-                        style: TextStyle(color: Colors.grey, fontSize: 15),
-                      ),
-
-                      IconButton(
-                        icon: Icon(Icons.delete, size: 20),
-                        onPressed: () => _confirmDelete(dish.id),
-                        padding: EdgeInsets.zero,
-                      ),
-                    ],
-                  ),
-                ],
+                ),
               ),
             ),
           ],

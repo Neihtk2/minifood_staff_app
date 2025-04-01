@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:minifood_admin/modules/home/widget_home/dishes/view/dishes_screen.dart';
+import 'package:minifood_admin/modules/home/widget_home/orders/controller/orders_controller.dart';
+import 'package:minifood_admin/modules/home/widget_home/orders/view/orders_screen.dart';
+import 'package:minifood_admin/modules/home/widget_home/users/controller/users_controller.dart';
+import 'package:minifood_admin/modules/home/widget_home/users/view/user_screen.dart';
 
 // Main Screen
 class HomeScreen extends StatefulWidget {
@@ -14,8 +19,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     const AnalyticsScreen(),
     DishesScreen(),
-    const OrdersScreen(),
-    const UsersScreen(),
+    GetBuilder<OrdersController>(
+      init: OrdersController(),
+      builder: (controller) => OrdersScreen(),
+    ),
+    GetBuilder<UsersController>(
+      init: UsersController(),
+      builder: (controller) => UsersScreen(),
+    ),
   ];
 
   @override
@@ -71,24 +82,6 @@ class ProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(child: Text('Màn hình Quản lý Sản phẩm'));
-  }
-}
-
-class OrdersScreen extends StatelessWidget {
-  const OrdersScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Màn hình Quản lý Đơn hàng'));
-  }
-}
-
-class UsersScreen extends StatelessWidget {
-  const UsersScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(child: Text('Màn hình Quản lý Người dùng'));
   }
 }
 

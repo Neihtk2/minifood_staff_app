@@ -11,10 +11,8 @@ import 'package:path/path.dart' as path;
 import 'package:http_parser/http_parser.dart';
 
 abstract class DishedReponsitory {
-  Future<List<DishedModel>> getDisheds(String? category);
-  Future<DishedModel> getDished(int id);
-  Future<void> addDished(DishedModel dished);
-  Future<void> updateDished(DishedModel dished);
+  Future<List<DishedModel>> getDishes(String? category);
+  Future<DishedModel?> getDishedbyId(String id);
   Future<void> deleteDished(String id);
   Future<Response> createDish({
     required String name,
@@ -23,6 +21,14 @@ abstract class DishedReponsitory {
     required File imageFile,
     required String token,
   });
+  Future<Response> updateDished(
+    String id,
+    String? name,
+    int? price,
+    String? category,
+    File? imageFile,
+    String token,
+  );
 }
 
 class DishedReponsitoryImpl implements DishedReponsitory {
@@ -80,7 +86,7 @@ class DishedReponsitoryImpl implements DishedReponsitory {
     final token = box.read(StorageConstants.accessToken);
     try {
       final response = await api.dio.delete(
-        Endpoints.dishes + '/' + id.toString(),
+        '${Endpoints.dishes}/$id',
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
       return response;
@@ -91,17 +97,11 @@ class DishedReponsitoryImpl implements DishedReponsitory {
   }
 
   @override
-  Future<DishedModel> getDished(int id) {
-    // TODO: implement getDished
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<DishedModel>> getDisheds(String? category) async {
+  Future<List<DishedModel>> getDishes(String? category) async {
     final token = box.read(StorageConstants.accessToken);
     try {
       final response = await api.dio.get(
-        Endpoints.getAllDishes,
+        Endpoints.dishes,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
       final dishes = _handleResponse(response);
@@ -116,15 +116,72 @@ class DishedReponsitoryImpl implements DishedReponsitory {
   }
 
   @override
-  Future<void> updateDished(DishedModel dished) {
-    // TODO: implement updateDished
-    throw UnimplementedError();
+  Future<Response> updateDished(
+    String id,
+    String? name,
+    int? price,
+    String? category,
+    File? imageFile,
+    String token,
+  ) async {
+    try {
+      final formData = FormData();
+      if (name != null) formData.fields.add(MapEntry('name', name));
+      if (price != null) {
+        formData.fields.add(MapEntry('price', price.toString()));
+      }
+      if (category != null) formData.fields.add(MapEntry('category', category));
+
+      if (imageFile != null) {
+        formData.files.add(
+          MapEntry(
+            'image',
+            await MultipartFile.fromFile(
+              imageFile.path,
+              filename:
+                  'dish_${DateTime.now().millisecondsSinceEpoch}${path.extension(imageFile.path)}',
+              contentType: MediaType('image', 'jpeg'),
+            ),
+          ),
+        );
+      }
+
+      final response = await api.dio.put(
+        '${Endpoints.dishes}/$id',
+        data: formData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+      print("response nè Thiên: " + response.toString());
+      return response;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print("Lỗi từ server: ${e.response}");
+        return e.response!;
+      } else {
+        throw Exception('Lỗi kết nối: ${e.message}');
+      }
+    }
   }
 
   @override
-  Future<void> addDished(DishedModel dished) {
-    // TODO: implement addDished
-    throw UnimplementedError();
+  Future<DishedModel?> getDishedbyId(String id) async {
+    final token = box.read(StorageConstants.accessToken);
+    try {
+      final response = await api.dio.get(
+        Endpoints.dishes + "/" + id,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      final dishes = DishedModel.fromJson(response.data["data"]);
+      return dishes;
+    } on DioException catch (e) {
+      _handleError(e);
+      return null;
+    }
   }
 }
 

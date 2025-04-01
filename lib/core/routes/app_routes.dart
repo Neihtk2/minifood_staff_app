@@ -5,4 +5,5 @@ abstract class RouterName {
   static const USERS = '/users';
   static const PRODUCTS = '/products';
   static const DISHEDADD = '/dishedadd';
+  static const DISHED_UPDATE = '/dishedupdate';
 }
