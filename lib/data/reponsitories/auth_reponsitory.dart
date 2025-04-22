@@ -6,7 +6,7 @@ import 'package:minifood_admin/data/sources/remote/api_service.dart';
 
 abstract class AuthRepositoryService {
   Future<AuthModel?> login(String email, String password);
-  Future<AuthModel?> register(String username, String email, String password);
+  Future<Response> register(String username, String email, String password);
   Future<void> logout();
 }
 
@@ -31,21 +31,20 @@ class AuthRepository implements AuthRepositoryService {
   }
 
   @override
-  Future<AuthModel?> register(
+  Future<Response> register(
     String username,
     String email,
     String password,
   ) async {
-    try {
-      final response = await _api.dio.post(
-        Endpoints.register,
-        data: {'username': username, 'email': email, 'password': password},
-      );
-      return _handleResponse(response);
-    } on DioException catch (e) {
-      _handleError(e);
-      return null;
-    }
+    return await _api.dio.post(
+      Endpoints.register,
+      data: {
+        'name': username,
+        'email': email,
+        'password': password,
+        // 'role': "user",
+      },
+    );
   }
 
   @override

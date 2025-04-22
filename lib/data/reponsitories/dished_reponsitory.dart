@@ -156,7 +156,7 @@ class DishedReponsitoryImpl implements DishedReponsitory {
           },
         ),
       );
-      print("response nè Thiên: " + response.toString());
+
       return response;
     } on DioException catch (e) {
       if (e.response != null) {

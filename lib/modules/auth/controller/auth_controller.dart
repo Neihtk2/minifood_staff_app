@@ -1,7 +1,7 @@
 // lib/presentation/controllers/auth_controller.dart
 
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:get_storage/get_storage.dart';
 import 'package:minifood_admin/core/constants/storage_constants.dart';
 import 'package:minifood_admin/core/routes/app_routes.dart';
@@ -22,8 +22,14 @@ class AuthController extends GetxController {
       if (email.isNotEmpty || password.isNotEmpty) {
         final AuthModel? req = await _repo.login(email, password);
         if (req != null) {
-          print("Phản hồi API: ${req.mess}");
+          Get.snackbar(
+            'Thành công',
+            'Đăng nhập thành công',
+            duration: const Duration(seconds: 2),
+            snackPosition: SnackPosition.BOTTOM,
+          );
           _saveTokens(req.token);
+
           Get.offAllNamed(RouterName.HOME);
         }
         // else {
@@ -37,23 +43,21 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> register(
-    String name,
-    String email,
-    String password,
-    String render,
-    String address,
-  ) async {
+  Future<void> register(String name, String email, String password) async {
     isLoading.value = true;
     try {
       if (email.isNotEmpty || password.isNotEmpty) {
         // final response = await _apiService.LoginApp(username, password);
-        final AuthModel? req = await _repo.register(name, email, password);
-        if (req != null) {
-          _saveTokens(req.token);
-          Get.toNamed(RouterName.HOME);
+        final Response response = await _repo.register(name, email, password);
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          Get.snackbar(
+            'Thành công',
+            'Đăng ký thành công',
+            duration: const Duration(seconds: 2),
+            snackPosition: SnackPosition.BOTTOM,
+          );
         } else {
-          Get.snackbar('Error', 'Login failed');
+          Get.snackbar('Lỗi', 'Đăng ký không thành công');
         }
       }
     } catch (e) {
@@ -78,5 +82,5 @@ void _handleError(dynamic e) {
       e is DioException
           ? e.response?.data['message'] ?? e.message
           : e.toString();
-  // Get.snackbar('Error', message);
+  Get.snackbar('Error', message);
 }

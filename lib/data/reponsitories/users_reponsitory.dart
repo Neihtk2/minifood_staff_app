@@ -8,7 +8,9 @@ import 'package:minifood_admin/data/models/user_model.dart';
 import 'package:minifood_admin/data/sources/remote/api_service.dart';
 
 abstract class UsersReponsitory {
-  Future<List<UserModel>> getAllUsers(String? role);
+  Future<UserModel?> profile();
+  Future<Response> updateProfile(UserModel user);
+  Future<Response> changePassword(String oldPassword, String newPassword);
 }
 
 class UsersRepositoryImpl implements UsersReponsitory {
@@ -18,30 +20,61 @@ class UsersRepositoryImpl implements UsersReponsitory {
   final box = GetStorage();
   static UsersRepositoryImpl get instance => _instance;
   @override
-  Future<List<UserModel>> getAllUsers(String? role) async {
+  Future<UserModel?> profile() async {
     final token = box.read(StorageConstants.accessToken);
     try {
       final response = await api.dio.get(
-        Endpoints.getAllUsers,
+        Endpoints.profile,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
-      final users = _handleResponse(response);
-      if (role != null) {
-        return users.where((user) => user.role == role).toList();
-      }
-      return users;
+      final user = profileResponse(response);
+      return user;
     } on DioException catch (e) {
       handleError(e);
-      return [];
+      return null;
+    }
+  }
+
+  @override
+  Future<Response> updateProfile(UserModel user) async {
+    final token = box.read(StorageConstants.accessToken);
+    try {
+      final response = await api.dio.put(
+        Endpoints.profile,
+        data: user.toJson(),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      return response;
+    } on DioException catch (e) {
+      handleError(e);
+      return e.response!;
+    }
+  }
+
+  @override
+  Future<Response> changePassword(
+    String oldPassword,
+    String newPassword,
+  ) async {
+    final token = box.read(StorageConstants.accessToken);
+    try {
+      return await api.dio.post(
+        Endpoints.changePassword,
+        data: {'currentPassword': oldPassword, 'newPassword': newPassword},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } on DioException catch (e) {
+      handleError(e);
+      return e.response!;
     }
   }
 }
 
-List<UserModel> _handleResponse(Response response) {
-  if (response.statusCode != 200 && response.statusCode != 201) return [];
+UserModel? profileResponse(Response response) {
+  if (response.statusCode != 200 && response.statusCode != 201) return null;
   try {
-    final List<dynamic> jsonList = response.data;
-    return jsonList.map((json) => UserModel.fromJson(json)).toList();
+    final json = response.data['data'];
+    return UserModel.fromJson(json);
   } catch (e) {
     throw const FormatException('Invalid user data format');
   }

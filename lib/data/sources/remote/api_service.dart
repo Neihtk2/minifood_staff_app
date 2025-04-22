@@ -11,16 +11,22 @@ class ApiService extends GetxService {
       receiveTimeout: const Duration(seconds: 30),
     ),
   );
-  // late Dio dio;
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //   dio = Dio(
-  //     BaseOptions(
-  //       baseUrl: Endpoints.baseUrl,
-  //       connectTimeout: const Duration(seconds: 30),
-  //       receiveTimeout: const Duration(seconds: 30),
-  //     ),
-  //   );
-  // }
+  ApiService() {
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          // Add any request interceptors here
+          return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          // Add any response interceptors here
+          return handler.next(response);
+        },
+        onError: (DioError e, handler) {
+          // Handle errors here
+          return handler.next(e);
+        },
+      ),
+    );
+  }
 }

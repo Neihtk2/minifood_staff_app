@@ -23,4 +23,12 @@ class DishedModel {
     category: json["category"] ?? "null",
     quantity: json["quantity"] ?? 0,
   );
+  Map<String, dynamic> toJson() => {
+    "_id": id,
+    "name": name,
+    "price": price,
+    "image": image,
+    "category": category,
+    "quantity": quantity,
+  };
 }

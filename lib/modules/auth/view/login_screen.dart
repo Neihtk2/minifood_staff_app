@@ -61,7 +61,7 @@ class LoginScreen extends GetView<AuthController> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () => Get.toNamed(RouterName.HOME),
+                  onPressed: () {},
                   child: Text(
                     'Recovery Password',
                     style: TextStyle(color: Colors.grey[600]),

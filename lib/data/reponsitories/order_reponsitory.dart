@@ -8,7 +8,15 @@ import 'package:minifood_admin/data/models/orders_model.dart';
 import 'package:minifood_admin/data/sources/remote/api_service.dart';
 
 abstract class OrdersReponsitory {
-  Future<List<OrdersModel>> getAllOrders(String? status);
+  Future<List<OrdersModel>> getOrders();
+  Future<void> creatOrder(
+    String customerName,
+    String phone,
+    String deliveryAddress,
+    String paymentMethod,
+    int orderTotal,
+    String? voucherCode,
+  );
   Future<void> updateStatus(String? status, String id);
 }
 
@@ -20,7 +28,7 @@ class OrdersRepositoryImpl implements OrdersReponsitory {
   final box = GetStorage();
   static OrdersRepositoryImpl get instance => _instance;
   @override
-  Future<List<OrdersModel>> getAllOrders(String? status) async {
+  Future<List<OrdersModel>> getOrders() async {
     final token = box.read(StorageConstants.accessToken);
     try {
       final response = await api.dio.get(
@@ -28,9 +36,6 @@ class OrdersRepositoryImpl implements OrdersReponsitory {
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
       final orders = _handleResponse(response);
-      if (status != null) {
-        return orders.where((order) => order.status == status).toList();
-      }
       return orders;
     } on DioException catch (e) {
       handleError(e);
@@ -45,6 +50,34 @@ class OrdersRepositoryImpl implements OrdersReponsitory {
       await api.dio.patch(
         "${Endpoints.orders}/status/$id",
         data: {"status": status},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } on DioException catch (e) {
+      handleError(e);
+    }
+  }
+
+  @override
+  Future<void> creatOrder(
+    String customerName,
+    String phone,
+    String deliveryAddress,
+    String paymentMethod,
+    int orderTotal,
+    String? voucherCode,
+  ) async {
+    final token = box.read(StorageConstants.accessToken);
+    try {
+      await api.dio.post(
+        Endpoints.orders,
+        data: {
+          "customerName": customerName,
+          "phone": phone,
+          "deliveryAddress": deliveryAddress,
+          "paymentMethod": paymentMethod,
+          "orderTotal": orderTotal,
+          "voucherCode": voucherCode,
+        },
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
     } on DioException catch (e) {
