@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:minifood_admin/core/utils/color_status/color_status.dart';
 
 import 'package:minifood_admin/data/models/dished_model.dart';
 import 'package:minifood_admin/data/models/orders_model.dart';
 import 'package:minifood_admin/modules/views/order/order_controller.dart';
+import 'package:minifood_admin/modules/views/order/order_detail.dart';
 
 class OrderListScreen extends StatelessWidget {
   const OrderListScreen({super.key});
@@ -17,7 +20,7 @@ class OrderListScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          "My Orders",
+          "Đơn hàng",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
@@ -38,127 +41,136 @@ class OrderListScreen extends StatelessWidget {
   }
 
   Widget _buildOrderItem(OrdersModel order) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      margin: EdgeInsets.only(bottom: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 5,
-            spreadRadius: 1,
-          ),
-        ],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Tên cửa hàng + trạng thái đơn hàng
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.store),
-                  SizedBox(width: 8),
-                  Text(
-                    order.id,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-              Text(
-                order.status,
-                style: TextStyle(color: Colors.red, fontSize: 14),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-
-          // Hình ảnh + Chi tiết sản phẩm
-          ListView.builder(
-            itemCount: order.items.length,
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return OrderItemWidget(item: order.items[index]);
-            },
-          ),
-          Divider(thickness: 1, height: 30),
-
-          // Tổng tiền
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "Total: ",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+    final currency = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
+    return InkWell(
+      onTap: () {
+        Get.to(OrderDetailScreen(order: order));
+      },
+      child: Container(
+        padding: EdgeInsets.all(16),
+        margin: EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              // color: Colors.grey.withOpacity(0.2),
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 5,
+              spreadRadius: 1,
+            ),
+          ],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.store),
+                    SizedBox(width: 8),
+                    Text(
+                      order.id,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  Text(
-                    "\$${order.total}",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Divider(thickness: 1, height: 30),
-
-          // Lưu ý
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  'Please only click "Order Received" once the order has been delivered to you and there are no problems with the product',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
+                  ],
                 ),
-              ),
-              SizedBox(width: 10),
-
-              // Nút "Order Received"
-              ElevatedButton(
-                onPressed: () {
-                  // Handle order received logic here
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  disabledBackgroundColor:
-                      Colors.red.shade200, // Làm mờ khi disable
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text(
-                  "Order Received",
+                Text(
+                  getStatusText(order.status),
                   style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                    color: getStatusColor(order.status),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-        ],
+              ],
+            ),
+            SizedBox(height: 10),
+
+            // Hình ảnh + Chi tiết sản phẩm
+            ListView.builder(
+              itemCount: order.items.length,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return OrderItemWidget(item: order.items[index]);
+              },
+            ),
+            Divider(thickness: 1, height: 30),
+
+            // Tổng tiền
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "Tổng: ",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      '${currency.format(order.total)}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Divider(thickness: 1, height: 30),
+
+            // Lưu ý
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // Expanded(
+                //   child: Text(
+                //     "Lưu ý: ${order.note}",
+                //     style: TextStyle(fontSize: 14, color: Colors.black),
+                //     maxLines: 1,
+                //     overflow: TextOverflow.ellipsis,
+                //   ),
+                // ),
+                // SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    disabledBackgroundColor:
+                        Colors.red.shade200, // Làm mờ khi disable
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    "Huỷ đơn",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+          ],
+        ),
       ),
     );
   }
@@ -170,6 +182,7 @@ class OrderItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currency = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       height: 100,
@@ -177,7 +190,6 @@ class OrderItemWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Hình ảnh món ăn
           Container(
             width: 100,
             height: 100,
@@ -224,7 +236,8 @@ class OrderItemWidget extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  '\$${item.quantity * item.price}',
+                  ' ${currency.format(item.quantity * item.price)}',
+
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 14,

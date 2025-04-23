@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:minifood_admin/core/routes/app_routes.dart';
@@ -14,12 +15,11 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   CartController cartController = Get.find();
-  int get shipping => 40;
   int get subtotal => cartController.filteredCartItem.fold(
     0,
     (sum, item) => sum + (item.price * item.quantity),
   );
-  int get delivery => 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,17 +28,17 @@ class _CartScreenState extends State<CartScreen> {
         backgroundColor: Colors.grey[50],
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.sp),
           onPressed: () {
             Get.back();
           },
           style: IconButton.styleFrom(backgroundColor: Colors.white),
         ),
-        title: const Text(
+        title: Text(
           'Giỏ hàng',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 18,
+            fontSize: 18.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -65,6 +65,7 @@ class _CartScreenState extends State<CartScreen> {
                     onQuantityChanged: (newQuantity) {
                       setState(() {
                         item.quantity = newQuantity;
+                        cartController.updateCartItem(item.id, newQuantity);
                       });
                     },
                     onRemove: () {
@@ -77,55 +78,32 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
             Container(
-              height: MediaQuery.of(context).size.height * 0.35,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  topRight: Radius.circular(25),
-                ),
-                color: Colors.white,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  OrderSummary(
-                    subtotal: subtotal,
-                    shipping: shipping,
-                    total: subtotal + shipping,
-                    delivery: delivery,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Get.toNamed(
-                          RouterName.CHECKOUT,
-                          arguments: {
-                            'subtotal': subtotal,
-                            'shipping': shipping,
-                            'total': subtotal + shipping,
-                            'delivery': delivery,
-                          },
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF4795DE),
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                      child: const Text(
-                        'Checkout',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
+              height: 70.h,
+              child: Padding(
+                padding: EdgeInsets.all(8.sp),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.toNamed(
+                      RouterName.CHECKOUT,
+                      arguments: {'subtotal': subtotal},
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4795DE),
+                    minimumSize: Size(double.infinity, 50.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.r),
                     ),
                   ),
-                ],
+                  child: Text(
+                    'Tiến hành thanh toán',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
@@ -148,25 +126,24 @@ class CartItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currency = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      height: 160,
+      margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
+      height: 100.h,
       width: double.infinity,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Shoe icon/image
           Container(
-            width: 100,
-            height: 160,
+            width: 100.w,
+            height: 100.h,
             decoration: BoxDecoration(
               color: Colors.pink.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
             ),
             child: Image.network(item.image, fit: BoxFit.cover),
           ),
-          const SizedBox(width: 16),
-          // Item details
+          SizedBox(width: 16.w),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,22 +151,21 @@ class CartItemWidget extends StatelessWidget {
               children: [
                 Text(
                   item.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     color: Colors.black,
                   ),
                 ),
                 Text(
-                  '\$${item.price.toStringAsFixed(2)}',
-                  style: const TextStyle(
+                  currency.format(item.quantity * item.price),
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     color: Colors.black,
                   ),
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     IconButton(
                       onPressed: () {
@@ -197,42 +173,36 @@ class CartItemWidget extends StatelessWidget {
                           onQuantityChanged(item.quantity - 1);
                         }
                       },
-                      icon: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.remove, color: Colors.grey, size: 16),
-                      ),
+                      icon: Icon(Icons.remove, color: Colors.grey, size: 16.sp),
                       style: IconButton.styleFrom(
                         backgroundColor: Colors.white,
                         padding: EdgeInsets.zero,
-                        tapTargetSize:
-                            MaterialTapTargetSize.shrinkWrap, // 🔥 Tắt padding
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       constraints: BoxConstraints(),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10.w),
                     Text(
                       '${item.quantity}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 16,
+                        fontSize: 16.sp,
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10.w),
                     IconButton(
                       onPressed: () {
                         onQuantityChanged(item.quantity + 1);
                       },
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.add_circle,
                         color: Color(0xFF4795DE),
-                        size: 32,
+                        size: 32.sp,
                       ),
-
                       style: IconButton.styleFrom(
                         backgroundColor: Colors.white,
                         padding: EdgeInsets.zero,
-                        tapTargetSize:
-                            MaterialTapTargetSize.shrinkWrap, // 🔥 Tắt padding
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       constraints: BoxConstraints(),
                     ),
@@ -241,138 +211,27 @@ class CartItemWidget extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16.w),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // Container(
-              //   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              //   decoration: BoxDecoration(
-              //     color: Colors.grey.withOpacity(0.1),
-              //     borderRadius: BorderRadius.circular(4),
-              //   ),
-              // child: Text(
-              //   item.id.toString(),
-              //   style: const TextStyle(
-              //     fontWeight: FontWeight.w500,
-              //     fontSize: 12,
-              //   ),
-              // ),
-              // ),
               IconButton(
                 constraints: BoxConstraints(),
-                icon: const Icon(Icons.delete_outline, color: Colors.red),
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: Colors.red,
+                  size: 24.sp,
+                ),
                 style: IconButton.styleFrom(
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 onPressed: onRemove,
               ),
+              SizedBox(height: 8.h),
             ],
           ),
         ],
       ),
     );
   }
-}
-
-class OrderSummary extends StatelessWidget {
-  final int subtotal;
-  final int shipping;
-  final int total;
-  final int delivery;
-  const OrderSummary({
-    Key? key,
-    required this.subtotal,
-    required this.shipping,
-    required this.total,
-    required this.delivery,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Subtotal',
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-              Text(
-                '\$${formartted(subtotal)}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Shipping',
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-              Text(
-                '\$${formartted(shipping)}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Delivery',
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-              Text(
-                '\$${formartted(delivery)}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-          const Divider(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Total Cost',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text(
-                '\$${formartted(total)}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-String formartted(num number) {
-  String formattedPrice = NumberFormat("#,##0.00").format(number);
-  return formattedPrice;
 }

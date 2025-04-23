@@ -81,7 +81,7 @@ class LoginScreen extends GetView<AuthController> {
                       style: TextStyle(color: Colors.blue),
                       recognizer:
                           TapGestureRecognizer()
-                            ..onTap = () => Get.toNamed(RouterName.HOME),
+                            ..onTap = () => Get.toNamed(RouterName.REGISTER),
                     ),
                   ],
                 ),

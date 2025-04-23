@@ -40,8 +40,7 @@ class SignupScreen extends GetView<AuthController> {
               _buildTextField("Password"),
               _buildPasswordField(),
               SizedBox(height: 10.h),
-              _buildTextField("Chức vụ"),
-              _buildRoleSelection(),
+
               SizedBox(height: 20.h),
               _buildSignUpButton(),
             ],
@@ -51,34 +50,34 @@ class SignupScreen extends GetView<AuthController> {
     );
   }
 
-  Widget _buildRoleSelection() {
-    return Obx(
-      () => Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          _buildRadioButton("admin"),
-          SizedBox(width: 10),
-          _buildRadioButton("staff"),
-          SizedBox(width: 10),
-          _buildRadioButton("user"),
-        ],
-      ),
-    );
-  }
+  // Widget _buildRoleSelection() {
+  //   return Obx(
+  //     () => Row(
+  //       mainAxisAlignment: MainAxisAlignment.start,
+  //       children: [
+  //         _buildRadioButton("admin"),
+  //         SizedBox(width: 10),
+  //         _buildRadioButton("staff"),
+  //         SizedBox(width: 10),
+  //         _buildRadioButton("user"),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Widget _buildRadioButton(String role) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Radio<String>(
-          value: role,
-          groupValue: selectedRole.value,
-          onChanged: (value) => selectedRole.value = value!,
-        ),
-        Text(role.toUpperCase()),
-      ],
-    );
-  }
+  // Widget _buildRadioButton(String role) {
+  //   return Row(
+  //     mainAxisSize: MainAxisSize.min,
+  //     children: [
+  //       Radio<String>(
+  //         value: role,
+  //         groupValue: selectedRole.value,
+  //         onChanged: (value) => selectedRole.value = value!,
+  //       ),
+  //       Text(role.toUpperCase()),
+  //     ],
+  //   );
+  // }
 
   Widget _buildTextField(String hint) {
     return Column(

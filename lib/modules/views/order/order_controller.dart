@@ -17,7 +17,7 @@ class OrdersController extends GetxController {
     getOrders();
   }
 
-  Future<void> creatOrder(
+  Future<void> createOrder(
     String customerName,
     String phone,
     String deliveryAddress,

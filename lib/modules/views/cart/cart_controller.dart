@@ -8,6 +8,7 @@ class CartController extends GetxController {
   final CartRepositoryImpl _repo = CartRepositoryImpl.instance;
   final RxBool isLoading = false.obs;
   final RxString error = ''.obs;
+  final RxInt total = 0.obs;
   var filteredCartItem = <DishedModel>[].obs;
   @override
   void onInit() {
