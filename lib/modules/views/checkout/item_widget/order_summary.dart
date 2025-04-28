@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:intl/intl.dart';
 
 class OrderSummary extends StatelessWidget {
   final int subtotal;
-  final int shipping;
+
   final int total;
   final int delivery;
   const OrderSummary({
     Key? key,
     required this.subtotal,
-    required this.shipping,
+
     required this.total,
     required this.delivery,
   }) : super(key: key);
@@ -38,23 +38,7 @@ class OrderSummary extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Phí giao hàng: ',
-                style: TextStyle(color: Colors.grey, fontSize: 16),
-              ),
-              Text(
-                currency.format(shipping),
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
+
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

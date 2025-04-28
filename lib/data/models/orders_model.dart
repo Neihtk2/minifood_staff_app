@@ -1,4 +1,4 @@
-import 'package:minifood_admin/data/models/dished_model.dart';
+import 'package:minifood_staff/data/models/dished_model.dart';
 
 class OrdersModel {
   String id;
@@ -10,6 +10,8 @@ class OrdersModel {
   List<DishedModel> items;
   int total;
   String status;
+  String? couponCode;
+  String shipper;
   DateTime createdAt;
   DateTime? updatedAt;
 
@@ -22,9 +24,11 @@ class OrdersModel {
     required this.paymentMethod,
     required this.items,
     required this.total,
+    required this.shipper,
     required this.status,
     required this.createdAt,
     this.updatedAt,
+    this.couponCode,
   });
   factory OrdersModel.fromJson(Map<String, dynamic> json) => OrdersModel(
     id: json["_id"],
@@ -38,8 +42,10 @@ class OrdersModel {
     ),
     total: json["total"],
     status: json["status"],
+    couponCode: json["voucher"] ?? "",
     createdAt: DateTime.parse(json["createdAt"]),
     updatedAt:
         json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    shipper: json["shipper"] ?? "",
   );
 }

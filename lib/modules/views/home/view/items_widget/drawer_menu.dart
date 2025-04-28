@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:minifood_admin/core/routes/app_routes.dart';
-import 'package:minifood_admin/modules/views/profile/profile_controller.dart';
+import 'package:minifood_staff/core/routes/app_routes.dart';
+import 'package:minifood_staff/modules/views/profile/profile_controller.dart';
+import 'package:minifood_staff/modules/views/vouchers/view/vouchers_view.dart';
 
 class CustomDrawer extends StatelessWidget {
   @override
@@ -79,7 +80,7 @@ class CustomDrawer extends StatelessWidget {
         } else if (title == "Đơn Hàng") {
           Get.toNamed(RouterName.ORDERS);
         } else if (title == "Mã Giảm Giá") {
-          Get.toNamed(RouterName.SPLASH);
+          Get.toNamed(RouterName.VOUCHERS);
         }
         // else if (title == "Home Page") {
         //   Get.toNamed(Routes.HOME);

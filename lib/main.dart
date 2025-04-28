@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:minifood_admin/core/routes/app_routes.dart';
-import 'package:minifood_admin/data/sources/remote/api_service.dart';
-import 'package:minifood_admin/modules/views/cart/cart_controller.dart';
-import 'package:minifood_admin/modules/views/home/controller/dishes_controller.dart';
-import 'package:minifood_admin/modules/views/order/order_controller.dart';
-import 'package:minifood_admin/modules/views/profile/profile_controller.dart';
+import 'package:minifood_staff/core/routes/app_routes.dart';
+import 'package:minifood_staff/data/sources/remote/api_service.dart';
 
 import 'core/routes/app_pages.dart';
 

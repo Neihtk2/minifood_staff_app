@@ -3,10 +3,10 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:get_storage/get_storage.dart';
-import 'package:minifood_admin/core/constants/storage_constants.dart';
-import 'package:minifood_admin/core/routes/app_routes.dart';
-import 'package:minifood_admin/data/models/auth_model.dart';
-import 'package:minifood_admin/data/reponsitories/auth_reponsitory.dart';
+import 'package:minifood_staff/core/constants/storage_constants.dart';
+import 'package:minifood_staff/core/routes/app_routes.dart';
+import 'package:minifood_staff/data/models/auth_model.dart';
+import 'package:minifood_staff/data/reponsitories/auth_reponsitory.dart';
 
 class AuthController extends GetxController {
   final AuthRepository _repo = AuthRepository.instance;
@@ -21,20 +21,16 @@ class AuthController extends GetxController {
     try {
       if (email.isNotEmpty || password.isNotEmpty) {
         final AuthModel? req = await _repo.login(email, password);
-        if (req != null) {
-          Get.snackbar(
-            'Thành công',
-            'Đăng nhập thành công',
-            duration: const Duration(seconds: 2),
-            snackPosition: SnackPosition.BOTTOM,
-          );
-          _saveTokens(req.token);
 
-          Get.offAllNamed(RouterName.HOME);
+        if (req != null) {
+          _saveTokens(req.token);
+          if (req.role == "staff") {
+            Get.snackbar('Thành công', 'Đăng nhập thành công!');
+            Get.offAllNamed(RouterName.HOME);
+          } else {
+            Get.snackbar('Thông báo', 'Chỉ dành cho nhân viên!');
+          }
         }
-        // else {
-        //   Get.snackbar('Error', 'Login failed');
-        // }
       }
     } catch (e) {
       _handleError(e);

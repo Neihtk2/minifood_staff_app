@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:minifood_admin/core/utils/color_status/color_status.dart';
-import 'package:minifood_admin/data/models/orders_model.dart';
+import 'package:minifood_staff/core/utils/color_status/color_status.dart';
+import 'package:minifood_staff/data/models/orders_model.dart';
 import 'package:intl/intl.dart';
 
 class OrderDetailScreen extends StatelessWidget {
@@ -36,7 +36,7 @@ class OrderDetailScreen extends StatelessWidget {
             _infoRow('Thanh toán:', order.paymentMethod),
             _statusRow(order.status),
             _infoRow('Ngày tạo:', dateFormat.format(order.createdAt)),
-
+            _infoRow("Mã giảm giá: ", order.couponCode ?? ""),
             const SizedBox(height: 16),
             _sectionTitle('Món đã đặt'),
             const SizedBox(height: 8),
@@ -132,12 +132,7 @@ class OrderDetailScreen extends StatelessWidget {
             flex: 2,
             child: Text(
               'Trạng thái:',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-
-                color: Colors.blueGrey,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(

@@ -1,16 +1,18 @@
 import 'package:get/get.dart';
-import 'package:minifood_admin/core/routes/app_routes.dart';
-import 'package:minifood_admin/modules/auth/binding/auth_binding.dart';
-import 'package:minifood_admin/modules/auth/view/login_screen.dart';
-import 'package:minifood_admin/modules/auth/view/sigin_screen.dart';
-import 'package:minifood_admin/modules/views/cart/cart_binding.dart';
-import 'package:minifood_admin/modules/views/cart/cart_screen.dart';
-import 'package:minifood_admin/modules/views/checkout/checkout_binding.dart';
-import 'package:minifood_admin/modules/views/checkout/checkout_screen.dart';
-import 'package:minifood_admin/modules/views/home/bindings/home_bindings.dart';
-import 'package:minifood_admin/modules/views/home/home_screen.dart';
-import 'package:minifood_admin/modules/views/order/order_binding.dart';
-import 'package:minifood_admin/modules/views/order/order_screen.dart';
+import 'package:minifood_staff/core/routes/app_routes.dart';
+import 'package:minifood_staff/modules/auth/binding/auth_binding.dart';
+import 'package:minifood_staff/modules/auth/view/login_screen.dart';
+
+import 'package:minifood_staff/modules/views/cart/cart_binding.dart';
+import 'package:minifood_staff/modules/views/cart/cart_screen.dart';
+import 'package:minifood_staff/modules/views/checkout/checkout_binding.dart';
+import 'package:minifood_staff/modules/views/checkout/checkout_screen.dart';
+import 'package:minifood_staff/modules/views/home/bindings/home_bindings.dart';
+import 'package:minifood_staff/modules/views/home/home_screen.dart';
+import 'package:minifood_staff/modules/views/shipping/controller/shipping_binding.dart';
+import 'package:minifood_staff/modules/views/shipping/view/shipping_screen.dart';
+import 'package:minifood_staff/modules/views/vouchers/bindings/vouchers_binding.dart';
+import 'package:minifood_staff/modules/views/vouchers/view/vouchers_view.dart';
 
 class AppPages {
   static final pages = [
@@ -19,11 +21,7 @@ class AppPages {
       page: () => LoginScreen(),
       binding: AuthBinding(),
     ),
-    GetPage(
-      name: RouterName.REGISTER,
-      page: () => SignupScreen(),
-      binding: AuthBinding(),
-    ),
+
     GetPage(
       name: RouterName.CHECKOUT,
       page: () => CheckoutScreen(),
@@ -36,13 +34,18 @@ class AppPages {
     ),
     GetPage(
       name: RouterName.ORDERS,
-      page: () => OrderListScreen(),
-      binding: OrderBinding(),
+      page: () => ShippingScreen(),
+      binding: ShippingBinding(),
     ),
     GetPage(
       name: RouterName.HOME,
       page: () => HomeScreen(),
       binding: HomeBindings(),
+    ),
+    GetPage(
+      name: RouterName.VOUCHERS,
+      page: () => VouchersListView(),
+      binding: VouchersBinding(),
     ),
   ];
 }

@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:minifood_admin/core/constants/storage_constants.dart';
-import 'package:minifood_admin/data/models/dished_model.dart';
-import 'package:minifood_admin/data/reponsitories/cart_reponsitory.dart';
+import 'package:minifood_staff/core/constants/storage_constants.dart';
+import 'package:minifood_staff/data/models/dished_model.dart';
+import 'package:minifood_staff/data/reponsitories/cart_reponsitory.dart';
 
 class CartController extends GetxController {
   final CartRepositoryImpl _repo = CartRepositoryImpl.instance;

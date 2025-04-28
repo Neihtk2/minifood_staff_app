@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:minifood_admin/core/constants/app_string.dart';
+import 'package:minifood_staff/core/constants/app_string.dart';
 
-import 'package:minifood_admin/modules/views/home/controller/dishes_controller.dart';
-import 'package:minifood_admin/modules/views/home/view/items_widget/menu_widget/menu_widget_item.dart';
+import 'package:minifood_staff/modules/views/home/controller/dishes_controller.dart';
+import 'package:minifood_staff/modules/views/home/view/items_widget/menu_widget/menu_widget_item.dart';
 
 class MenuWidget extends StatefulWidget {
   @override

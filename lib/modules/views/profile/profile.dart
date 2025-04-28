@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:minifood_admin/modules/views/profile/edit_profile.dart';
-import 'package:minifood_admin/modules/views/profile/profile_controller.dart';
+import 'package:minifood_staff/modules/views/profile/edit_profile.dart';
+import 'package:minifood_staff/modules/views/profile/profile_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key}) : super(key: key) {}

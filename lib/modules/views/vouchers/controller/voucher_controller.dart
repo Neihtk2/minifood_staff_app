@@ -1,27 +1,42 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:minifood_admin/data/models/voucher_model.dart';
-import 'package:minifood_admin/data/reponsitories/vouchers_reponsitory.dart';
+import 'package:minifood_staff/data/models/voucher_model.dart';
+import 'package:minifood_staff/data/reponsitories/vouchers_reponsitory.dart';
 
 class VoucherController extends GetxController {
   final VouchersReponsitoryImpl repo = VouchersReponsitoryImpl.instance;
   final RxList<Voucher> orders = <Voucher>[].obs;
+  final RxList<Voucher> vouchers = <Voucher>[].obs;
   final RxInt orderTotal = 0.obs;
   final selectedVoucher = Rxn<Voucher>();
   final voucherCode = ''.obs;
   final discountAmount = 0.obs;
   final isLoading = false.obs;
   @override
-  void onInit() {
+  onInit() {
     super.onInit();
-    getVouchersbyTotal(10000000);
+    getVouchers();
   }
 
   Future<void> getVouchersbyTotal(int total) async {
     try {
       isLoading.value = true;
+      final vouchers = await repo.getAllVouchers();
       orderTotal.value = total;
-      final vouchers = await repo.getAllVouchers(orderTotal.value);
+      final currentTotal = total;
+      for (var v in vouchers) {
+        v.isValid = currentTotal >= v.minOrderValue;
+      }
       orders.assignAll(vouchers);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> getVouchers() async {
+    try {
+      isLoading.value = true;
+      vouchers.value = await repo.getAllVouchers();
     } finally {
       isLoading.value = false;
     }
@@ -37,11 +52,11 @@ class VoucherController extends GetxController {
     return selectedVoucher.value?.id == voucher.id;
   }
 
-  void applyVoucher() {
-    // Simulate a network request
-    isLoading.value = true;
-    Future.delayed(Duration(seconds: 2), () {
-      isLoading.value = false;
-    });
+  Future<void> applyVoucher(String code) async {
+    try {
+      await repo.applyVoucher(code);
+    } catch (e) {
+      Get.snackbar("Lỗi", e.toString(), backgroundColor: Colors.red);
+    }
   }
 }

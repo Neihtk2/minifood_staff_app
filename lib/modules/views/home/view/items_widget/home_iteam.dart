@@ -1,62 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:minifood_admin/core/routes/app_routes.dart';
-import 'package:minifood_admin/data/models/dished_model.dart';
-import 'package:minifood_admin/modules/views/home/controller/dishes_controller.dart';
-import 'package:minifood_admin/modules/views/home/view/items_widget/drawer_menu.dart';
-import 'package:minifood_admin/modules/views/home/view/items_widget/toy_item.dart';
-
-import 'package:minifood_admin/modules/views/home/view/items_widget/toylist.dart';
-import 'package:minifood_admin/modules/views/search/search_screen.dart';
-import 'package:minifood_admin/modules/views/toys/toys_detail.dart';
+import 'package:minifood_staff/core/routes/app_routes.dart';
+import 'package:minifood_staff/data/models/dished_model.dart';
+import 'package:minifood_staff/modules/views/home/controller/dishes_controller.dart';
+import 'package:minifood_staff/modules/views/home/view/items_widget/drawer_menu.dart';
+import 'package:minifood_staff/modules/views/home/view/items_widget/menu_widget/dish_view/dishes_item.dart';
+import 'package:minifood_staff/modules/views/home/view/items_widget/menu_widget/dish_view/dishes_list.dart';
+import 'package:minifood_staff/modules/views/search/search_screen.dart';
 
 class HomeItem extends StatelessWidget {
-  HomeItem({super.key});
+  const HomeItem({super.key});
+
   @override
   Widget build(BuildContext context) {
-    DishesController dishesController = Get.find();
-    // List<DishedModel> dishes = dishesController.allDishes;
+    final dishesController = Get.find<DishesController>();
+
     return Scaffold(
       drawer: CustomDrawer(),
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: _buildAppBar(),
       body: Obx(() {
-        final dishes = dishesController.allDishes;
-
         if (dishesController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (dishes.isEmpty) {
+        if (dishesController.allDishes.isEmpty) {
           return const Center(child: Text("Không có món ăn nào."));
         }
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              _buildSearchBar(),
-              const SizedBox(height: 10),
-              // _buildCategoryIcons(),
-              // const SizedBox(height: 10),
-              _buildSection(
-                "Món ăn phổ biến",
-                _buildHorizontalList(dishes),
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => PopularToysScreen()),
-                  );
-                },
-              ),
-              const SizedBox(height: 10),
-              _buildSection("Món mới", _buildVerticalList(dishes), () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => NewToysScreen()),
-                );
-              }),
-            ],
+        return RefreshIndicator(
+          onRefresh: dishesController.refreshDishes,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                _buildSearchBar(),
+                const SizedBox(height: 15),
+                _buildSection(
+                  "Món ăn phổ biến",
+                  _buildHorizontalList(dishesController.topDishes),
+                ),
+                const SizedBox(height: 15),
+                _buildSection(
+                  "Món mới",
+                  _buildVerticalList(dishesController.newDishes),
+                ),
+              ],
+            ),
           ),
         );
       }),
@@ -83,13 +73,9 @@ class HomeItem extends StatelessWidget {
         ],
       ),
       centerTitle: true,
-
       actions: [
         GestureDetector(
-          onTap: () {
-            // Get.to(CartScreen());
-            Get.toNamed(RouterName.CART);
-          },
+          onTap: () => Get.toNamed(RouterName.CART),
           child: Stack(
             children: const [
               CircleAvatar(
@@ -111,7 +97,7 @@ class HomeItem extends StatelessWidget {
 
   Widget _buildSearchBar() {
     return GestureDetector(
-      onTap: () => Get.to(() => SearchScreen()), // Điều hướng sang màn tìm kiếm
+      onTap: () => Get.to(() => SearchScreen()),
       child: Container(
         height: 50,
         decoration: BoxDecoration(
@@ -125,9 +111,9 @@ class HomeItem extends StatelessWidget {
             ),
           ],
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 14), // Thêm padding
-        child: Row(
-          children: const [
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: const Row(
+          children: [
             Icon(Icons.search, color: Colors.grey),
             SizedBox(width: 10),
             Text(
@@ -140,43 +126,13 @@ class HomeItem extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryIcons() {
-    final icons = [
-      Icons.toys_rounded,
-      Icons.abc,
-      Icons.access_alarm,
-      Icons.toys,
-      Icons.toys_sharp,
-    ];
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: icons.map((icon) => _CircleIcon(icon: icon)).toList(),
-    );
-  }
-
-  Widget _buildSection(String title, Widget content, VoidCallback onSeeAll) {
+  Widget _buildSection(String title, Widget content) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            GestureDetector(
-              onTap: onSeeAll,
-              child: const Text(
-                "See all",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
+        Text(
+          title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
         content,
@@ -191,10 +147,8 @@ class HomeItem extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: dishes.length,
         itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              Get.to(() => ToyDetailScreen());
-            },
+          return Padding(
+            padding: const EdgeInsets.only(right: 16),
             child: DishedCard(dish: dishes[index]),
           );
         },
@@ -207,20 +161,12 @@ class HomeItem extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: dishes.length,
-      itemBuilder: (context, index) => ToyCard(product: dishes[index]),
-    );
-  }
-}
-
-class _CircleIcon extends StatelessWidget {
-  final IconData icon;
-  const _CircleIcon({required this.icon});
-
-  @override
-  Widget build(BuildContext context) {
-    return CircleAvatar(
-      backgroundColor: Colors.white,
-      child: Icon(icon, size: 26, color: Colors.black),
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: ToyCard(product: dishes[index]),
+        );
+      },
     );
   }
 }
@@ -237,29 +183,6 @@ class _NotificationDot extends StatelessWidget {
         color: Colors.red,
         shape: BoxShape.circle,
       ),
-    );
-  }
-}
-
-// =======================
-// Tạo màn hình mới
-// =======================
-class PopularToysScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Popular Toys")),
-      body: const Center(child: Text("Danh sách Popular Toys ở đây")),
-    );
-  }
-}
-
-class NewToysScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("New Toys")),
-      body: const Center(child: Text("Danh sách New Toys ở đây")),
     );
   }
 }

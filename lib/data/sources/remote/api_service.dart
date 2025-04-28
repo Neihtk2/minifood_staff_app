@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
-import 'package:minifood_admin/core/constants/api_constants.dart';
+import 'package:minifood_staff/core/constants/api_constants.dart';
 
 class ApiService extends GetxService {
   final Dio dio = Dio(

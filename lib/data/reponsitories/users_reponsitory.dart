@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:get_storage/get_storage.dart';
-import 'package:minifood_admin/core/constants/api_constants.dart';
-import 'package:minifood_admin/core/constants/storage_constants.dart';
-import 'package:minifood_admin/core/utils/error/error_func.dart';
-import 'package:minifood_admin/data/models/user_model.dart';
-import 'package:minifood_admin/data/sources/remote/api_service.dart';
+import 'package:minifood_staff/core/constants/api_constants.dart';
+import 'package:minifood_staff/core/constants/storage_constants.dart';
+import 'package:minifood_staff/core/utils/error/error_func.dart';
+import 'package:minifood_staff/data/models/user_model.dart';
+import 'package:minifood_staff/data/sources/remote/api_service.dart';
 
 abstract class UsersReponsitory {
   Future<UserModel?> profile();

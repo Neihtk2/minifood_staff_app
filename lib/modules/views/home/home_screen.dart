@@ -2,13 +2,15 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
-import 'package:minifood_admin/modules/views/home/view/items_widget/home_iteam.dart';
-import 'package:minifood_admin/modules/views/home/view/items_widget/menu_widget/menu_widget.dart';
-import 'package:minifood_admin/modules/views/profile/profile.dart';
-import 'package:minifood_admin/modules/views/home/controller/dishes_controller.dart';
-import 'package:minifood_admin/modules/views/cart/cart_controller.dart';
-import 'package:minifood_admin/modules/views/profile/profile_controller.dart';
-import 'package:minifood_admin/modules/views/vouchers/voucher_controller.dart';
+import 'package:minifood_staff/modules/views/home/view/items_widget/home_iteam.dart';
+import 'package:minifood_staff/modules/views/home/view/items_widget/menu_widget/menu_widget.dart';
+import 'package:minifood_staff/modules/views/orders/order_controller.dart';
+import 'package:minifood_staff/modules/views/orders/view/orders_screen.dart';
+import 'package:minifood_staff/modules/views/profile/profile.dart';
+import 'package:minifood_staff/modules/views/home/controller/dishes_controller.dart';
+import 'package:minifood_staff/modules/views/cart/cart_controller.dart';
+import 'package:minifood_staff/modules/views/profile/profile_controller.dart';
+import 'package:minifood_staff/modules/views/shipping/view/shipping_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -18,7 +20,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [HomeItem(), MenuWidget(), ProfileScreen()];
+  final List<Widget> _pages = [
+    HomeItem(),
+    MenuWidget(),
+    OrdersScreen(),
+    ShippingScreen(),
+    ProfileScreen(),
+  ];
 
   @override
   void initState() {
@@ -63,9 +71,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: _selectedIndex == 1 ? Colors.white : Colors.grey,
                 ),
                 Icon(
-                  Icons.person,
+                  Icons.list_alt,
                   size: 30,
                   color: _selectedIndex == 2 ? Colors.white : Colors.grey,
+                ),
+                Icon(
+                  Icons.local_shipping,
+                  size: 30,
+                  color: _selectedIndex == 3 ? Colors.white : Colors.grey,
+                ),
+                Icon(
+                  Icons.person,
+                  size: 30,
+                  color: _selectedIndex == 4 ? Colors.white : Colors.grey,
                 ),
               ],
               onTap: (index) {
@@ -84,6 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
     await Get.putAsync(() async => DishesController());
     await Get.putAsync(() async => ProfileController());
     await Get.putAsync(() async => CartController());
-    // await Get.putAsync(() async => VoucherController());
+    await Get.putAsync(() async => OrdersController());
   }
 }

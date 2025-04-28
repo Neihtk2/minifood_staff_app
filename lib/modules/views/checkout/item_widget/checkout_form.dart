@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:minifood_admin/modules/views/checkout/item_widget/voucher_item.dart';
-import 'package:minifood_admin/modules/views/vouchers/voucher_controller.dart';
+import 'package:minifood_staff/modules/views/checkout/item_widget/voucher_item.dart';
+import 'package:minifood_staff/modules/views/vouchers/controller/voucher_controller.dart';
 
 class CheckoutForm extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController phoneController;
-  final TextEditingController addressController;
-  final TextEditingController voucherController;
+
   final RxString paymentMethod;
   final int currentOrderTotal;
   CheckoutForm({
@@ -16,8 +15,7 @@ class CheckoutForm extends StatefulWidget {
     required this.nameController,
     required this.phoneController,
     required this.paymentMethod,
-    required this.addressController,
-    required this.voucherController,
+
     required this.currentOrderTotal,
   }) : super(key: key);
 
@@ -39,8 +37,6 @@ class _CheckoutFormState extends State<CheckoutForm> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<VoucherController>();
-    controller.getVouchersbyTotal(widget.currentOrderTotal);
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: SingleChildScrollView(
@@ -86,7 +82,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                             TextField(
                               controller: widget.nameController,
                               decoration: InputDecoration(
-                                labelText: 'Tên người nhận',
+                                labelText: 'Tên khách hàng',
                                 border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Colors.grey[300] ?? Colors.grey,
@@ -99,20 +95,12 @@ class _CheckoutFormState extends State<CheckoutForm> {
                             TextField(
                               controller: widget.phoneController,
                               decoration: InputDecoration(
-                                labelText: 'Số điện thoại người nhận',
+                                labelText: 'Số điện thoại khách hàng',
                                 labelStyle: TextStyle(color: Colors.grey),
                                 border: OutlineInputBorder(),
                               ),
                             ),
                             const SizedBox(height: 16),
-                            TextField(
-                              controller: widget.addressController,
-                              decoration: InputDecoration(
-                                labelText: 'Địa chỉ người nhận',
-                                labelStyle: TextStyle(color: Colors.grey),
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -169,7 +157,7 @@ class _CheckoutFormState extends State<CheckoutForm> {
                                           ? Colors.blue
                                           : Colors.grey,
                                 ),
-                                child: const Text('COD'),
+                                child: const Text('Tiền mặt'),
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -221,7 +209,6 @@ class _CheckoutFormState extends State<CheckoutForm> {
                     children: [
                       Obx(() {
                         final controller = Get.find<VoucherController>();
-
                         final vouchers = controller.orders;
                         final isLoading = controller.isLoading.value;
                         if (isLoading) {

@@ -4,10 +4,10 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:minifood_admin/modules/views/checkout/item_widget/checkout_form.dart';
-import 'package:minifood_admin/modules/views/checkout/item_widget/order_summary.dart';
-import 'package:minifood_admin/modules/views/order/order_controller.dart';
-import 'package:minifood_admin/modules/views/vouchers/voucher_controller.dart';
+import 'package:minifood_staff/modules/views/checkout/item_widget/checkout_form.dart';
+import 'package:minifood_staff/modules/views/checkout/item_widget/order_summary.dart';
+import 'package:minifood_staff/modules/views/orders/order_controller.dart';
+import 'package:minifood_staff/modules/views/vouchers/controller/voucher_controller.dart';
 
 class CheckoutScreen extends StatefulWidget {
   @override
@@ -15,24 +15,26 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
-  final TextEditingController addressController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController voucherController = TextEditingController();
-
+  VoucherController voucherController = Get.find();
   final RxString paymentMethod = 'cod'.obs;
   late KeyboardVisibilityController _keyboardVisibilityController;
   final RxInt total = 0.obs;
   final RxInt delivery = 0.obs;
   final RxString voucherCode = ''.obs;
-  RxInt shipping = 20000.obs;
+
   bool _isKeyboardVisible = false;
   @override
   void initState() {
     super.initState();
-    ever(Get.find<VoucherController>().discountAmount, (discount) {
+    ever(voucherController.discountAmount, (discount) {
       delivery.value = discount;
       _calculateTotal();
+    });
+    ever(voucherController.voucherCode, (code) {
+      voucherCode.value = code;
+      print('Voucher code nèeeeeee: $code');
     });
     _keyboardVisibilityController = KeyboardVisibilityController();
     _keyboardVisibilityController.onChange.listen((bool visible) {
@@ -50,9 +52,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void _calculateTotal({int? subtotal}) {
-    final currentSubtotal =
-        subtotal ?? total.value - shipping.value + delivery.value;
-    total.value = currentSubtotal + shipping.value - delivery.value;
+    final currentSubtotal = subtotal ?? total.value + delivery.value;
+    total.value = currentSubtotal - delivery.value;
   }
 
   @override
@@ -91,8 +92,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               nameController: nameController,
               phoneController: phoneController,
               paymentMethod: paymentMethod,
-              addressController: addressController,
-              voucherController: voucherController,
+
               currentOrderTotal: subtotal,
             ),
           ),
@@ -113,7 +113,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     _calculateTotal(subtotal: subtotal);
                     return OrderSummary(
                       subtotal: subtotal,
-                      shipping: shipping.value,
+
                       total: total.value,
                       delivery: delivery.value,
                     );
@@ -126,8 +126,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ordersController.isLoading.value
                                 ? null
                                 : () async {
-                                  if (addressController.text.isEmpty ||
-                                      phoneController.text.isEmpty) {
+                                  if (phoneController.text.isEmpty) {
                                     Get.snackbar(
                                       'Thông báo',
                                       'Vui lòng nhập đầy đủ thông tin',
@@ -137,11 +136,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     await ordersController.createOrder(
                                       nameController.text,
                                       phoneController.text,
-                                      addressController.text,
+
                                       paymentMethod.value,
                                       total.value,
-                                      voucherController.text,
+                                      voucherCode.value,
                                     );
+
                                     Get.back();
                                   }
                                 },

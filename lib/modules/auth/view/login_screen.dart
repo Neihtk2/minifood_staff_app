@@ -3,9 +3,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:minifood_admin/core/constants/app_string.dart';
-import 'package:minifood_admin/core/routes/app_routes.dart';
-import 'package:minifood_admin/modules/auth/controller/auth_controller.dart';
+import 'package:minifood_staff/core/constants/app_string.dart';
+import 'package:minifood_staff/core/routes/app_routes.dart';
+import 'package:minifood_staff/modules/auth/controller/auth_controller.dart';
 
 class LoginScreen extends GetView<AuthController> {
   final TextEditingController _emailController = TextEditingController();

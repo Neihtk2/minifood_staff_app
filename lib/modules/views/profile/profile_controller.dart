@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:minifood_admin/core/constants/storage_constants.dart';
-import 'package:minifood_admin/core/routes/app_routes.dart';
-import 'package:minifood_admin/core/utils/error/error_func.dart';
-import 'package:minifood_admin/data/models/user_model.dart';
-import 'package:minifood_admin/data/reponsitories/users_reponsitory.dart';
+import 'package:minifood_staff/core/constants/storage_constants.dart';
+import 'package:minifood_staff/core/routes/app_routes.dart';
+import 'package:minifood_staff/core/utils/error/error_func.dart';
+import 'package:minifood_staff/data/models/user_model.dart';
+import 'package:minifood_staff/data/reponsitories/users_reponsitory.dart';
 
 class ProfileController extends GetxController {
   final UsersRepositoryImpl _repo = UsersRepositoryImpl.instance;

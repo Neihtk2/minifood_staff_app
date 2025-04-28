@@ -1,23 +1,25 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:get_storage/get_storage.dart';
-import 'package:minifood_admin/core/constants/api_constants.dart';
-import 'package:minifood_admin/core/constants/storage_constants.dart';
-import 'package:minifood_admin/core/utils/error/error_func.dart';
-import 'package:minifood_admin/data/models/orders_model.dart';
-import 'package:minifood_admin/data/sources/remote/api_service.dart';
+import 'package:minifood_staff/core/constants/api_constants.dart';
+import 'package:minifood_staff/core/constants/storage_constants.dart';
+import 'package:minifood_staff/core/utils/error/error_func.dart';
+import 'package:minifood_staff/data/models/orders_model.dart';
+import 'package:minifood_staff/data/sources/remote/api_service.dart';
 
 abstract class OrdersReponsitory {
-  Future<List<OrdersModel>> getOrders();
+  Future<List<OrdersModel>> getAllOrders(String? status);
   Future<void> creatOrder(
     String customerName,
     String phone,
-    String deliveryAddress,
     String paymentMethod,
     int orderTotal,
     String? voucherCode,
   );
   Future<void> updateStatus(String? status, String id);
+  Future<List<OrdersModel>> getPendingDelivery();
+  Future<void> acceptOrderForDelivery(String id);
+  Future<List<OrdersModel>> getAcceptedDeliveryOrders();
 }
 
 class OrdersRepositoryImpl implements OrdersReponsitory {
@@ -28,7 +30,7 @@ class OrdersRepositoryImpl implements OrdersReponsitory {
   final box = GetStorage();
   static OrdersRepositoryImpl get instance => _instance;
   @override
-  Future<List<OrdersModel>> getOrders() async {
+  Future<List<OrdersModel>> getAllOrders(String? status) async {
     final token = box.read(StorageConstants.accessToken);
     try {
       final response = await api.dio.get(
@@ -36,6 +38,9 @@ class OrdersRepositoryImpl implements OrdersReponsitory {
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
       final orders = _handleResponse(response);
+      if (status != null) {
+        return orders.where((order) => order.status == status).toList();
+      }
       return orders;
     } on DioException catch (e) {
       handleError(e);
@@ -61,7 +66,7 @@ class OrdersRepositoryImpl implements OrdersReponsitory {
   Future<void> creatOrder(
     String customerName,
     String phone,
-    String deliveryAddress,
+
     String paymentMethod,
     int orderTotal,
     String? voucherCode,
@@ -73,7 +78,7 @@ class OrdersRepositoryImpl implements OrdersReponsitory {
         data: {
           "customerName": customerName,
           "phone": phone,
-          "deliveryAddress": deliveryAddress,
+          "deliveryAddress": "Bán tại quầy",
           "paymentMethod": paymentMethod,
           "orderTotal": orderTotal,
           "voucherCode": voucherCode,
@@ -82,6 +87,52 @@ class OrdersRepositoryImpl implements OrdersReponsitory {
       );
     } on DioException catch (e) {
       handleError(e);
+    }
+  }
+
+  @override
+  Future<void> acceptOrderForDelivery(String id) async {
+    final token = box.read(StorageConstants.accessToken);
+    try {
+      await api.dio.patch(
+        "${Endpoints.getPendingDelivery}/$id",
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+    } on DioException catch (e) {
+      handleError(e);
+    }
+  }
+
+  @override
+  Future<List<OrdersModel>> getAcceptedDeliveryOrders() async {
+    final token = box.read(StorageConstants.accessToken);
+    try {
+      final response = await api.dio.get(
+        Endpoints.getAcceptedDelivery,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      final orders = _handleResponse(response);
+
+      return orders;
+    } on DioException catch (e) {
+      handleError(e);
+      return [];
+    }
+  }
+
+  @override
+  Future<List<OrdersModel>> getPendingDelivery() async {
+    final token = box.read(StorageConstants.accessToken);
+    try {
+      final response = await api.dio.get(
+        Endpoints.getPendingDelivery,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      final orders = _handleResponse(response);
+      return orders;
+    } on DioException catch (e) {
+      handleError(e);
+      return [];
     }
   }
 }

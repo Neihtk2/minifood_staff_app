@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:minifood_admin/core/routes/app_routes.dart';
-import 'package:minifood_admin/data/models/dished_model.dart';
-import 'package:minifood_admin/modules/views/cart/cart_controller.dart';
+import 'package:minifood_staff/core/routes/app_routes.dart';
+import 'package:minifood_staff/data/models/dished_model.dart';
+import 'package:minifood_staff/modules/views/cart/cart_controller.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -70,7 +70,8 @@ class _CartScreenState extends State<CartScreen> {
                     },
                     onRemove: () {
                       setState(() {
-                        cartController.filteredCartItem.removeAt(index);
+                        //  cartController.filteredCartItem.removeAt(index);
+                        cartController.removeFromCart(item.id);
                       });
                     },
                   );
@@ -165,48 +166,47 @@ class CartItemWidget extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        if (item.quantity > 1) {
-                          onQuantityChanged(item.quantity - 1);
-                        }
-                      },
-                      icon: Icon(Icons.remove, color: Colors.grey, size: 16.sp),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.white,
+
+                Container(
+                  height: 30.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25.r),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 70, 69, 69),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (item.quantity > 1) {
+                            onQuantityChanged(item.quantity - 1);
+                          }
+                        },
+                        icon: Icon(Icons.remove, size: 16.sp),
                         padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        constraints: BoxConstraints(),
                       ),
-                      constraints: BoxConstraints(),
-                    ),
-                    SizedBox(width: 10.w),
-                    Text(
-                      '${item.quantity}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16.sp,
+                      SizedBox(width: 10.w),
+                      Text(
+                        '${item.quantity}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.sp,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10.w),
-                    IconButton(
-                      onPressed: () {
-                        onQuantityChanged(item.quantity + 1);
-                      },
-                      icon: Icon(
-                        Icons.add_circle,
-                        color: Color(0xFF4795DE),
-                        size: 32.sp,
-                      ),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.white,
+                      SizedBox(width: 10.w),
+                      IconButton(
+                        onPressed: () {
+                          onQuantityChanged(item.quantity + 1);
+                        },
+                        icon: Icon(Icons.add, size: 20),
                         padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        constraints: BoxConstraints(),
                       ),
-                      constraints: BoxConstraints(),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -214,6 +214,7 @@ class CartItemWidget extends StatelessWidget {
           SizedBox(width: 16.w),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               IconButton(
                 constraints: BoxConstraints(),

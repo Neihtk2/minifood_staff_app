@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
-import 'package:minifood_admin/core/constants/api_constants.dart';
-import 'package:minifood_admin/data/models/auth_model.dart';
-import 'package:minifood_admin/data/sources/remote/api_service.dart';
+import 'package:minifood_staff/core/constants/api_constants.dart';
+import 'package:minifood_staff/data/models/auth_model.dart';
+import 'package:minifood_staff/data/sources/remote/api_service.dart';
 
 abstract class AuthRepositoryService {
   Future<AuthModel?> login(String email, String password);

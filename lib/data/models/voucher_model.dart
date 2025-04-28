@@ -1,23 +1,21 @@
 import 'package:intl/intl.dart';
-import 'package:minifood_admin/core/utils/format_number/format_number.dart';
+import 'package:minifood_staff/core/utils/format_number/format_number.dart';
 
 class Voucher {
   final String id;
   final String code;
-
   final int value;
   final int minOrderValue;
-  final double? maxDiscountAmount;
+  final int? maxUses;
   final DateTime startDate;
   final DateTime endDate;
-  final int? maxUses;
+
   final int? maxUsagePerUser;
   final int usedCount;
   List<UserUsage> usersUsage;
   final String image;
   final bool isActive;
-
-  final bool? isValid;
+  bool isValid;
 
   Voucher({
     this.id = '',
@@ -25,7 +23,7 @@ class Voucher {
 
     required this.value,
     required this.minOrderValue,
-    this.maxDiscountAmount,
+
     required this.startDate,
     required this.endDate,
     this.maxUses,
@@ -35,7 +33,7 @@ class Voucher {
     this.image = '',
     this.isActive = true,
 
-    this.isValid,
+    this.isValid = false,
   }) : usersUsage = usersUsage ?? [];
   String get formattedStartDate => DateFormat('dd-MM-yyyy').format(startDate);
   String get formattedEndDate => DateFormat('dd-MM-yyyy').format(endDate);
@@ -48,14 +46,9 @@ class Voucher {
 
       value: (json['value'] as num).toInt(),
       minOrderValue: (json['minOrderValue'] as num).toInt(),
-
-      maxDiscountAmount:
-          json['maxDiscountAmount'] != null
-              ? double.parse(json['maxDiscountAmount'].toString())
-              : null,
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),
-      maxUses: json['maxUses'],
+      maxUses: json['maxUses'] != null ? (json['maxUses'] as num).toInt() : 0,
       maxUsagePerUser: json['maxUsagePerUser'],
       usedCount: json['usedCount'] ?? 0,
       usersUsage:
@@ -65,28 +58,22 @@ class Voucher {
           [],
       image: json['image'] ?? '',
       isActive: json['isActive'] ?? true,
-      isValid: json['isValid'],
+      isValid: json['isValid'] ?? false,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'code': code,
-
       'value': value,
       'minOrderValue': minOrderValue,
-      'maxDiscountAmount': maxDiscountAmount,
+
       'startDate': startDate.toIso8601String(),
       'endDate': endDate.toIso8601String(),
-      'maxUses': maxUses,
+
       'maxUsagePerUser': maxUsagePerUser,
     };
   }
-
-  // String get formattedMinOrder {
-  //   final formatter = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
-  //   return formatter.format(minOrderValue);
-  // }
 
   String get validity {
     final formatter = DateFormat('dd/MM/yyyy');
@@ -95,7 +82,7 @@ class Voucher {
 }
 
 class UserUsage {
-  final String userId;
+  final int userId;
   final int count;
 
   UserUsage({required this.userId, required this.count});

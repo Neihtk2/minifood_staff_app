@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:minifood_admin/data/models/voucher_model.dart';
-import 'package:minifood_admin/modules/views/vouchers/voucher_controller.dart';
+import 'package:minifood_staff/data/models/voucher_model.dart';
+import 'package:minifood_staff/modules/views/vouchers/controller/voucher_controller.dart';
 
 class VoucherItem extends StatelessWidget {
   final Voucher voucher;
@@ -36,13 +36,23 @@ class VoucherItem extends StatelessWidget {
             'Giảm ${voucher.formattedValue}₫ cho đơn từ ${voucher.formattedMinOrderValue}₫\nHiệu lực: ${voucher.validity}',
             style: const TextStyle(fontSize: 12),
           ),
-          trailing: ElevatedButton(
-            onPressed: () => controller.selectVoucher(voucher),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: isSelected ? Colors.green : null,
-            ),
-            child: Text(isSelected ? 'Đã chọn' : 'Áp dụng'),
-          ),
+          // trailing: ElevatedButton(
+          //   onPressed: () => controller.selectVoucher(voucher),
+          //   style: ElevatedButton.styleFrom(
+          //     backgroundColor: isSelected ? Colors.green : null,
+          //   ),
+          //   child: Text(isSelected ? 'Đã chọn' : 'Áp dụng'),
+          // ),
+          trailing:
+              voucher.isValid
+                  ? ElevatedButton(
+                    onPressed: () => controller.selectVoucher(voucher),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isSelected ? Colors.green : null,
+                    ),
+                    child: Text(isSelected ? 'Đã chọn' : 'Áp dụng'),
+                  )
+                  : null,
         ),
       );
     });

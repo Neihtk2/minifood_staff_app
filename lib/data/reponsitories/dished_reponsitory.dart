@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:get_storage/get_storage.dart';
-import 'package:minifood_admin/core/constants/api_constants.dart';
-import 'package:minifood_admin/core/constants/storage_constants.dart';
-import 'package:minifood_admin/data/models/dished_model.dart';
-import 'package:minifood_admin/data/sources/remote/api_service.dart';
+import 'package:minifood_staff/core/constants/api_constants.dart';
+import 'package:minifood_staff/core/constants/storage_constants.dart';
+import 'package:minifood_staff/data/models/dished_model.dart';
+import 'package:minifood_staff/data/sources/remote/api_service.dart';
 import 'package:path/path.dart' as path;
 import 'package:http_parser/http_parser.dart';
 
@@ -14,6 +14,14 @@ abstract class DishedReponsitory {
   Future<List<DishedModel>> getDishes(String? category);
   Future<DishedModel?> getDishedbyId(String id);
   Future<void> deleteDished(String id);
+  Future<List<DishedModel>> newDishes();
+  Future<List<DishedModel>> topDishes();
+  Future<void> sendReview({
+    required String dishName,
+
+    required int star,
+    required String comment,
+  });
   Future<Response> createDish({
     required String name,
     required int price,
@@ -173,7 +181,7 @@ class DishedReponsitoryImpl implements DishedReponsitory {
     final token = box.read(StorageConstants.accessToken);
     try {
       final response = await api.dio.get(
-        Endpoints.dishes + "/" + id,
+        "${Endpoints.dishes}/$id",
         options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
       final dishes = DishedModel.fromJson(response.data["data"]);
@@ -181,6 +189,63 @@ class DishedReponsitoryImpl implements DishedReponsitory {
     } on DioException catch (e) {
       _handleError(e);
       return null;
+    }
+  }
+
+  @override
+  Future<List<DishedModel>> newDishes() async {
+    final token = box.read(StorageConstants.accessToken);
+    try {
+      final response = await api.dio.get(
+        Endpoints.newDish,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      final dishes = _handleResponse(response);
+
+      return dishes;
+    } on DioException catch (e) {
+      _handleError(e);
+      return [];
+    }
+  }
+
+  @override
+  Future<List<DishedModel>> topDishes() async {
+    final token = box.read(StorageConstants.accessToken);
+    try {
+      final response = await api.dio.get(
+        Endpoints.topDishes,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      final dishes = _handleResponse(response);
+
+      return dishes.take(5).toList();
+    } on DioException catch (e) {
+      _handleError(e);
+      return [];
+    }
+  }
+
+  @override
+  Future<void> sendReview({
+    required String dishName,
+    required int star,
+    required String comment,
+  }) async {
+    final token = box.read(StorageConstants.accessToken);
+    try {
+      final response = await api.dio.post(
+        "${Endpoints.dishes}/ratings",
+        data: {"dishName": dishName, "star": star, "comment": comment},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      if (response.statusCode == 200) {
+        Get.snackbar('Thành công', 'Đánh giá thành công');
+      } else {
+        Get.snackbar('Lỗi', 'Đánh giá không thành công');
+      }
+    } on DioException catch (e) {
+      _handleError(e);
     }
   }
 }
