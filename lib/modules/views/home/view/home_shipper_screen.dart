@@ -2,31 +2,20 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
-import 'package:minifood_staff/modules/views/home/view/items_widget/home_iteam.dart';
-import 'package:minifood_staff/modules/views/home/view/items_widget/menu_widget/menu_widget.dart';
-import 'package:minifood_staff/modules/views/orders/order_controller.dart';
-import 'package:minifood_staff/modules/views/orders/view/orders_screen.dart';
 import 'package:minifood_staff/modules/views/profile/profile.dart';
-import 'package:minifood_staff/modules/views/home/controller/dishes_controller.dart';
-import 'package:minifood_staff/modules/views/cart/cart_controller.dart';
+
 import 'package:minifood_staff/modules/views/profile/profile_controller.dart';
+import 'package:minifood_staff/modules/views/shipping/controller/shipping_controller.dart';
 import 'package:minifood_staff/modules/views/shipping/view/shipping_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeShipperScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeShipperScreenState createState() => _HomeShipperScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeShipperScreenState extends State<HomeShipperScreen> {
   int _selectedIndex = 0;
-
-  final List<Widget> _pages = [
-    HomeItem(),
-    MenuWidget(),
-    OrdersScreen(),
-    ShippingScreen(),
-    ProfileScreen(),
-  ];
+  final List<Widget> _pages = [ShippingScreen(), ProfileScreen()];
 
   @override
   void initState() {
@@ -61,29 +50,14 @@ class _HomeScreenState extends State<HomeScreen> {
               index: _selectedIndex,
               items: <Widget>[
                 Icon(
-                  Icons.home,
+                  Icons.local_shipping,
                   size: 30,
                   color: _selectedIndex == 0 ? Colors.white : Colors.grey,
                 ),
                 Icon(
-                  Icons.restaurant_menu,
-                  size: 30,
-                  color: _selectedIndex == 1 ? Colors.white : Colors.grey,
-                ),
-                Icon(
-                  Icons.list_alt,
-                  size: 30,
-                  color: _selectedIndex == 2 ? Colors.white : Colors.grey,
-                ),
-                Icon(
-                  Icons.local_shipping,
-                  size: 30,
-                  color: _selectedIndex == 3 ? Colors.white : Colors.grey,
-                ),
-                Icon(
                   Icons.person,
                   size: 30,
-                  color: _selectedIndex == 4 ? Colors.white : Colors.grey,
+                  color: _selectedIndex == 1 ? Colors.white : Colors.grey,
                 ),
               ],
               onTap: (index) {
@@ -99,9 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _initializeControllers() async {
-    await Get.putAsync(() async => DishesController());
     await Get.putAsync(() async => ProfileController());
-    await Get.putAsync(() async => CartController());
-    await Get.putAsync(() async => OrdersController());
+    await Get.putAsync(() async => ShippingController());
   }
 }

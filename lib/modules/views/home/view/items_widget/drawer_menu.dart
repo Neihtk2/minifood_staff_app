@@ -52,7 +52,7 @@ class CustomDrawer extends StatelessWidget {
             // _buildDrawerItem(Icons.person_outline, "Profile"),
             // _buildDrawerItem(Icons.home_outlined, "Home Page"),
             _buildDrawerItem(Icons.card_giftcard_outlined, "Mã Giảm Giá"),
-            _buildDrawerItem(Icons.local_shipping_outlined, "Đơn Hàng"),
+            // _buildDrawerItem(Icons.local_shipping_outlined, "Đơn Hàng"),
 
             // Dòng kẻ ngăn cách
             const Divider(color: Colors.white54, thickness: 0.5),

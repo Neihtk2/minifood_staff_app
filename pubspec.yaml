@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  vietmap_flutter_gl: ^4.0.1
+  geolocator: ^10.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -49,6 +51,10 @@ dependencies:
   curved_navigation_bar: ^1.0.6
   diacritic: ^0.1.6
   shimmer: ^3.0.0
+  vietmap_flutter_navigation: ^4.0.0
+  location: ^8.0.0
+  flutter_svg: ^2.1.0
+  run: ^2025.503.21
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +81,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/navigation_symbol/
     
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

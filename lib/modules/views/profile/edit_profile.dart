@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minifood_staff/data/models/user_model.dart';
+import 'package:minifood_staff/modules/views/profile/profile_controller.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -10,7 +11,33 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  UserModel prf = Get.arguments as UserModel;
+  final UserModel prf = Get.arguments as UserModel;
+
+  late final TextEditingController nameController;
+  late final TextEditingController emailController;
+  late final TextEditingController phoneController;
+  late final TextEditingController addressController;
+
+  final ProfileController profileController = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: prf.name);
+    emailController = TextEditingController(text: prf.email);
+    phoneController = TextEditingController(text: prf.phone);
+    addressController = TextEditingController(text: prf.address);
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,20 +54,13 @@ class _EditProfileState extends State<EditProfile> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit, color: Colors.blue),
-            onPressed: () {
-              // Chức năng chỉnh sửa
-            },
-          ),
-        ],
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // Ảnh đại diện
+            // Avatar
             Center(
               child: Stack(
                 children: [
@@ -71,10 +91,10 @@ class _EditProfileState extends State<EditProfile> {
             ),
             const SizedBox(height: 10),
 
-            // Tên người dùng
+            // Họ tên hiển thị
             Text(
-              prf.name ?? "Chưa có tên",
-              style: TextStyle(
+              nameController.text,
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -82,47 +102,11 @@ class _EditProfileState extends State<EditProfile> {
             ),
             const SizedBox(height: 20),
 
-            // Các trường thông tin người dùng
-            _buildProfileField("Full Name", prf.name ?? "Chưa có tên"),
-            _buildProfileField("Email Address", prf.email ?? "Chưa có email"),
-            _buildProfileField("SĐT", prf.phone ?? "Chưa có SĐT"),
-            _buildProfileField("Address", prf.address ?? "Chưa có địa chỉ"),
-
-            // Chọn giới tính
-            // const SizedBox(height: 10),
-            // const Align(
-            //   alignment: Alignment.centerLeft,
-            //   child: Text("Gender", style: TextStyle(fontSize: 14, color: Colors.grey)),
-            // ),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       child: RadioListTile(
-            //         title: const Text("Male"),
-            //         value: "Male",
-            //         groupValue: _gender,
-            //         onChanged: (value) {
-            //           setState(() {
-            //             _gender = value.toString();
-            //           });
-            //         },
-            //       ),
-            //     ),
-            //     Expanded(
-            //       child: RadioListTile(
-            //         title: const Text("Female"),
-            //         value: "Female",
-            //         groupValue: _gender,
-            //         onChanged: (value) {
-            //           setState(() {
-            //             _gender = value.toString();
-            //           });
-            //         },
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // const SizedBox(height: 20),
+            // Trường nhập liệu
+            _buildProfileField("Full Name", nameController),
+            _buildProfileField("Email Address", emailController),
+            _buildProfileField("SĐT", phoneController),
+            _buildProfileField("Address", addressController),
 
             // Nút Update
             SizedBox(
@@ -136,9 +120,18 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
                 onPressed: () {
+                  final updatedUser = UserModel(
+                    name: nameController.text,
+                    email: emailController.text,
+                    phone: phoneController.text,
+                    address: addressController.text,
+                  );
+
+                  profileController.updateProfile(updatedUser);
+
                   Get.snackbar(
-                    "Success",
-                    "Profile updated successfully",
+                    "Thành công",
+                    "Đã cập nhật thông tin",
                     snackPosition: SnackPosition.BOTTOM,
                     backgroundColor: Colors.green,
                     colorText: Colors.white,
@@ -156,20 +149,15 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  // Widget tạo ô nhập thông tin
-  Widget _buildProfileField(
-    String label,
-    String value, {
-    bool isPassword = false,
-  }) {
+  // Trường thông tin
+  Widget _buildProfileField(String label, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
         const SizedBox(height: 5),
         TextFormField(
-          initialValue: value,
-          obscureText: isPassword,
+          controller: controller,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.grey.shade100,

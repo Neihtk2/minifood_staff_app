@@ -24,9 +24,12 @@ class AuthController extends GetxController {
 
         if (req != null) {
           _saveTokens(req.token);
+          _saveRole(req.role);
           if (req.role == "staff") {
             Get.snackbar('Thành công', 'Đăng nhập thành công!');
             Get.offAllNamed(RouterName.HOME);
+          } else if (req.role == "shipper") {
+            Get.offAllNamed(RouterName.SHIPPERHOME);
           } else {
             Get.snackbar('Thông báo', 'Chỉ dành cho nhân viên!');
           }
@@ -66,6 +69,13 @@ class AuthController extends GetxController {
   void _saveTokens(String? accessToken) {
     if (accessToken != null) {
       box.write(StorageConstants.accessToken, accessToken);
+      // box.write(MyConfig.REFRESH_TOKEN, refreshToken);
+    }
+  }
+
+  void _saveRole(String? role) {
+    if (role != null) {
+      box.write(StorageConstants.role, role);
       // box.write(MyConfig.REFRESH_TOKEN, refreshToken);
     }
   }

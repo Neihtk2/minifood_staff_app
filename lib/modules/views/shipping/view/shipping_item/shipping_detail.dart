@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:minifood_staff/data/models/orders_model.dart';
+import 'package:minifood_staff/modules/views/map/map_screen.dart';
 import 'package:minifood_staff/modules/views/orders/order_controller.dart';
 import 'package:minifood_staff/modules/views/orders/order_detail.dart';
+import 'package:minifood_staff/modules/views/shipping/controller/shipping_controller.dart';
 
 class ShippingDetail extends StatelessWidget {
   final List<OrdersModel> orders;
   const ShippingDetail({super.key, required this.orders});
   @override
   Widget build(BuildContext context) {
-    OrdersController controller = Get.find();
+    ShippingController controller = Get.find();
     return Obx(() {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
@@ -37,7 +39,7 @@ class ShippingDetail extends StatelessWidget {
   Widget _orderItemWidget(
     BuildContext context,
     OrdersModel order,
-    OrdersController controller,
+    ShippingController controller,
   ) {
     return InkWell(
       onTap: () {
@@ -102,7 +104,9 @@ class ShippingDetail extends StatelessWidget {
                           ? () {
                             controller.acceptOrderForDelivery(order.id);
                           }
-                          : null,
+                          : () {
+                            Get.to(MapScreen());
+                          },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     disabledBackgroundColor:
@@ -139,7 +143,10 @@ class ShippingDetail extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusDropdown(OrdersModel order, OrdersController controller) {
+  Widget _buildStatusDropdown(
+    OrdersModel order,
+    ShippingController controller,
+  ) {
     RxString orderStatus = order.status.obs;
     List<String> statuses = ["delivering", "completed", "rejected"];
 

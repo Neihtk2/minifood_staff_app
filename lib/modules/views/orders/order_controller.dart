@@ -84,8 +84,8 @@ class OrdersController extends GetxController {
       completed.value = await _repo.getAllOrders('completed');
       cancelled.value = await _repo.getAllOrders('cancelled');
       rejected.value = await _repo.getAllOrders('rejected');
-      getOrdersDelivery.value = await _repo.getPendingDelivery();
-      getAcceptedDelivery.value = await _repo.getAcceptedDeliveryOrders();
+      // getOrdersDelivery.value = await _repo.getPendingDelivery();
+      // getAcceptedDelivery.value = await _repo.getAcceptedDeliveryOrders();
     } catch (e) {
       handleError(e);
     } finally {

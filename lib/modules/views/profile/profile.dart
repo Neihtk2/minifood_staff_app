@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:minifood_staff/core/constants/storage_constants.dart';
+import 'package:minifood_staff/core/routes/app_routes.dart';
 import 'package:minifood_staff/modules/views/profile/edit_profile.dart';
 import 'package:minifood_staff/modules/views/profile/profile_controller.dart';
 
@@ -7,6 +10,7 @@ class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key}) : super(key: key) {}
   @override
   Widget build(BuildContext context) {
+    final box = GetStorage();
     final ProfileController prf = Get.find();
     return Scaffold(
       backgroundColor: Colors.white,
@@ -103,6 +107,40 @@ class ProfileScreen extends StatelessWidget {
               ),
               _buildProfileField("SĐT", user.phone ?? "Chưa có SĐT"),
               _buildProfileField("Địa Chỉ", user.address ?? "Chưa có tên"),
+
+              box.read(StorageConstants.role) == 'shipper'
+                  ? Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Get.offAllNamed(RouterName.LOGIN);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          disabledBackgroundColor:
+                              Colors.red.shade200, // Làm mờ khi disable
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          "Đăng Xuất",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                  : SizedBox.shrink(),
             ],
           ),
         );

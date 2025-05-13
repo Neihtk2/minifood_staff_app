@@ -1,11 +1,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-<uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:usesCleartextTraffic="true"
         android:label="minifood_admin"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <service
+            android:name="vn.vietmap.services.android.navigation.v5.navigation.NavigationService"
+            android:foregroundServiceType="location"
+            android:exported="false">
+            </service>
+             <meta-data
+            android:name="VIETMAP_ACCESS_TOKEN"
+            android:value="5ce0e35c4e0bdd0373a8532b329869a2330edc4ef4c5b24e" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

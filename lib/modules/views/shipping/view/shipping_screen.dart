@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:minifood_staff/modules/views/orders/order_controller.dart';
+import 'package:minifood_staff/modules/views/shipping/controller/shipping_controller.dart';
 import 'package:minifood_staff/modules/views/shipping/view/shipping_item/shipping_detail.dart';
 
 class ShippingScreen extends StatefulWidget {
@@ -11,13 +11,14 @@ class ShippingScreen extends StatefulWidget {
 
 class _OrdersScreenState extends State<ShippingScreen>
     with SingleTickerProviderStateMixin {
-  final OrdersController controller = Get.find<OrdersController>();
+  late ShippingController controller;
   late TabController _tabController;
   final List<String> _tabNames = ["Đơn cần giao", "Đơn đã nhận"];
   late List<ShippingDetail> _dataRenderers;
   @override
   void initState() {
     super.initState();
+    controller = Get.find<ShippingController>();
     _tabController = TabController(length: _tabNames.length, vsync: this);
     _dataRenderers = [
       ShippingDetail(orders: controller.getOrdersDelivery),

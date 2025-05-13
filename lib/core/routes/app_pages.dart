@@ -8,8 +8,9 @@ import 'package:minifood_staff/modules/views/cart/cart_screen.dart';
 import 'package:minifood_staff/modules/views/checkout/checkout_binding.dart';
 import 'package:minifood_staff/modules/views/checkout/checkout_screen.dart';
 import 'package:minifood_staff/modules/views/home/bindings/home_bindings.dart';
-import 'package:minifood_staff/modules/views/home/home_screen.dart';
-import 'package:minifood_staff/modules/views/shipping/controller/shipping_binding.dart';
+import 'package:minifood_staff/modules/views/home/view/home_screen.dart';
+import 'package:minifood_staff/modules/views/home/view/home_shipper_screen.dart';
+import 'package:minifood_staff/modules/views/shipping/bindings/shipping_binding.dart';
 import 'package:minifood_staff/modules/views/shipping/view/shipping_screen.dart';
 import 'package:minifood_staff/modules/views/vouchers/bindings/vouchers_binding.dart';
 import 'package:minifood_staff/modules/views/vouchers/view/vouchers_view.dart';
@@ -40,6 +41,11 @@ class AppPages {
     GetPage(
       name: RouterName.HOME,
       page: () => HomeScreen(),
+      binding: HomeBindings(),
+    ),
+    GetPage(
+      name: RouterName.SHIPPERHOME,
+      page: () => HomeShipperScreen(),
       binding: HomeBindings(),
     ),
     GetPage(
