@@ -23,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
     HomeItem(),
     MenuWidget(),
     OrdersScreen(),
-
     ProfileScreen(),
   ];
 
@@ -34,58 +33,60 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _initializeControllers(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(color: Colors.white),
-          ); // Hiển thị loading khi chưa tải xong
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Có lỗi khi khởi tạo controller'));
-        }
+    return Scaffold(
+      body: FutureBuilder(
+        future: _initializeControllers(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            ); // Hiển thị loading khi chưa tải xong
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Có lỗi khi khởi tạo controller'));
+          }
 
-        return Scaffold(
-          backgroundColor: Color(0xFFF8F9FA),
-          body: _pages[_selectedIndex],
-          bottomNavigationBar: CurvedNavigationBar(
-            backgroundColor: Color(0xFFF8F9FA)!,
-            color: Colors.white,
-            buttonBackgroundColor: Colors.blue,
-            height: 60,
-            animationDuration: Duration(milliseconds: 300),
-            index: _selectedIndex,
-            items: <Widget>[
-              Icon(
-                Icons.home,
-                size: 30,
-                color: _selectedIndex == 0 ? Colors.white : Colors.grey,
-              ),
-              Icon(
-                Icons.restaurant_menu,
-                size: 30,
-                color: _selectedIndex == 1 ? Colors.white : Colors.grey,
-              ),
-              Icon(
-                Icons.list_alt,
-                size: 30,
-                color: _selectedIndex == 2 ? Colors.white : Colors.grey,
-              ),
-              Icon(
-                Icons.person,
-                size: 30,
-                color: _selectedIndex == 3 ? Colors.white : Colors.grey,
-              ),
-            ],
-            onTap: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-          ),
-        );
-      },
+          return Scaffold(
+            backgroundColor: Color(0xFFF8F9FA),
+            body: _pages[_selectedIndex],
+            bottomNavigationBar: CurvedNavigationBar(
+              backgroundColor: Color(0xFFF8F9FA)!,
+              color: Colors.white,
+              buttonBackgroundColor: Colors.blue,
+              height: 60,
+              animationDuration: Duration(milliseconds: 300),
+              index: _selectedIndex,
+              items: <Widget>[
+                Icon(
+                  Icons.home,
+                  size: 30,
+                  color: _selectedIndex == 0 ? Colors.white : Colors.grey,
+                ),
+                Icon(
+                  Icons.restaurant_menu,
+                  size: 30,
+                  color: _selectedIndex == 1 ? Colors.white : Colors.grey,
+                ),
+                Icon(
+                  Icons.list_alt,
+                  size: 30,
+                  color: _selectedIndex == 2 ? Colors.white : Colors.grey,
+                ),
+                Icon(
+                  Icons.person,
+                  size: 30,
+                  color: _selectedIndex == 3 ? Colors.white : Colors.grey,
+                ),
+              ],
+              onTap: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 

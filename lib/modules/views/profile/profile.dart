@@ -59,29 +59,14 @@ class ProfileScreen extends StatelessWidget {
             children: [
               // Ảnh đại diện
               Center(
-                child: Stack(
-                  children: [
-                    const CircleAvatar(
-                      radius: 50,
-                      child: Icon(Icons.person, size: 40),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.blue,
-                          shape: BoxShape.circle,
-                        ),
-                        padding: const EdgeInsets.all(5),
-                        child: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage:
+                      user.image != null && user.image!.isNotEmpty
+                          ? NetworkImage(user.image!)
+                          : const NetworkImage(
+                            "https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/19/467/avatar-anime-nam-10.jpg",
+                          ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -114,7 +99,8 @@ class ProfileScreen extends StatelessWidget {
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          await box.remove(StorageConstants.accessToken);
                           Get.offAllNamed(RouterName.LOGIN);
                         },
                         style: ElevatedButton.styleFrom(

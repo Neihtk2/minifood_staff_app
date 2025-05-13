@@ -8,6 +8,7 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ProfileController prf = Get.find();
+    final user = prf.profile.value;
     return Drawer(
       child: Container(
         color: const Color(0xFF1D2630), // Màu nền tối
@@ -21,11 +22,14 @@ class CustomDrawer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Avatar
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage(
-                      'https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/19/467/avatar-anime-nam-10.jpg',
-                    ),
+                    backgroundImage:
+                        user.image != null && user.image!.isNotEmpty
+                            ? NetworkImage(user.image!)
+                            : const NetworkImage(
+                              "https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/19/467/avatar-anime-nam-10.jpg",
+                            ),
                   ),
                   const SizedBox(height: 10),
 

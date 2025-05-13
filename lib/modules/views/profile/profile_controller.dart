@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:minifood_staff/core/constants/storage_constants.dart';
 import 'package:minifood_staff/core/routes/app_routes.dart';
 import 'package:minifood_staff/core/utils/error/error_func.dart';
@@ -32,10 +33,11 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<void> updateProfile(UserModel user) async {
+  Future<void> updateProfile(UserModel user, {XFile? imageFile}) async {
     try {
       isLoading.value = true;
-      await _repo.updateProfile(user);
+      await _repo.updateProfile(user, imageFile: imageFile);
+      await getProfile();
       profile.value = user;
     } finally {
       isLoading.value = false;
