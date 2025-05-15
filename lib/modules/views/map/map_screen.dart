@@ -160,13 +160,20 @@ class MapScreenState extends State<MapScreen> {
                   _navigationController = controller;
                   try {
                     print('Bắt đầu vẽ tuyến đường với các điểm: $waypoints');
+                    await Future.delayed(Duration(milliseconds: 500));
+
+                    await _navigationController?.clearRoute();
+
                     await _navigationController?.buildRoute(
                       waypoints: waypoints,
                       profile: DrivingProfile.motorcycle,
                     );
+
                     print('Đã vẽ tuyến đường thành công');
+
                     await Future.delayed(Duration(seconds: 1));
-                    _navigationController?.startNavigation();
+
+                    await _navigationController?.startNavigation();
                   } catch (e) {
                     print('Lỗi khi vẽ tuyến đường: $e');
                     Get.snackbar(
