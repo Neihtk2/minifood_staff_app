@@ -12,6 +12,7 @@ class OrdersModel {
   String status;
   String? couponCode;
   String shipper;
+  String shipperPhone;
   DateTime createdAt;
   DateTime? updatedAt;
 
@@ -25,6 +26,7 @@ class OrdersModel {
     required this.items,
     required this.total,
     required this.shipper,
+    required this.shipperPhone,
     required this.status,
     required this.createdAt,
     this.updatedAt,
@@ -47,5 +49,6 @@ class OrdersModel {
     updatedAt:
         json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     shipper: json["shipper"] ?? "",
+    shipperPhone: json["phoneShipper"] ?? "",
   );
 }

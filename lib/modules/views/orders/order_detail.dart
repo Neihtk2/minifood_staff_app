@@ -37,6 +37,8 @@ class OrderDetailScreen extends StatelessWidget {
             _statusRow(order.status),
             _infoRow('Ngày tạo:', dateFormat.format(order.createdAt)),
             _infoRow("Mã giảm giá: ", order.couponCode ?? ""),
+            _infoRow('Nhân viên giao hàng:', order.shipper),
+            _infoRow('Số điện thoại nhân viên:', order.shipperPhone),
             const SizedBox(height: 16),
             _sectionTitle('Món đã đặt'),
             const SizedBox(height: 8),

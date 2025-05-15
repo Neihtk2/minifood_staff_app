@@ -8,7 +8,7 @@
 
     <application
         android:usesCleartextTraffic="true"
-        android:label="minifood_admin"
+        android:label="STAFF MINIFOOD"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <service

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:minifood_staff/data/models/orders_model.dart';
 import 'package:minifood_staff/modules/views/map/map_screen.dart';
+
 import 'package:minifood_staff/modules/views/orders/order_controller.dart';
 import 'package:minifood_staff/modules/views/orders/order_detail.dart';
 import 'package:minifood_staff/modules/views/shipping/controller/shipping_controller.dart';
@@ -105,7 +106,11 @@ class ShippingDetail extends StatelessWidget {
                             controller.acceptOrderForDelivery(order.id);
                           }
                           : () {
-                            Get.to(MapScreen());
+                            Get.to(
+                              MapScreen(
+                                destinationAddress: order.deliveryAddress,
+                              ),
+                            );
                           },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
