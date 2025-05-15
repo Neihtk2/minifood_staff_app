@@ -3,10 +3,12 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:get_storage/get_storage.dart';
+import 'package:minifood_staff/core/constants/api_constants.dart';
 import 'package:minifood_staff/core/constants/storage_constants.dart';
 import 'package:minifood_staff/core/routes/app_routes.dart';
 import 'package:minifood_staff/data/models/auth_model.dart';
-import 'package:minifood_staff/data/reponsitories/auth_reponsitory.dart';
+import 'package:minifood_staff/data/repositories/auth_reponsitory.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class AuthController extends GetxController {
   final AuthRepository _repo = AuthRepository.instance;
@@ -15,6 +17,24 @@ class AuthController extends GetxController {
   final RxString error = ''.obs;
   final RxBool isPasswordHidden = false.obs;
   final box = GetStorage();
+
+  late IO.Socket socket;
+
+  void _connectSocket(int userId, String role) {
+    socket = IO.io(Endpoints.baseUrl, <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': false,
+    });
+
+    socket.connect();
+
+    socket.onConnect((_) {
+      print('Connected to WebSocket server');
+      socket.emit('joinUser', {'userId': userId, 'role': role});
+    });
+
+    socket.onDisconnect((_) => print('Disconnected from WebSocket server'));
+  }
 
   Future<void> login(String email, String password) async {
     isLoading.value = true;
@@ -25,6 +45,8 @@ class AuthController extends GetxController {
         if (req != null) {
           _saveTokens(req.token);
           _saveRole(req.role);
+          _connectSocket(req.userId , req.role); // Kết nối WebSocket sau khi đăng nhập
+
           if (req.role == "staff") {
             Get.snackbar('Thành công', 'Đăng nhập thành công!');
             Get.offAllNamed(RouterName.HOME);

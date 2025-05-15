@@ -6,7 +6,7 @@ import 'package:minifood_staff/core/constants/storage_constants.dart';
 import 'package:minifood_staff/core/routes/app_routes.dart';
 import 'package:minifood_staff/core/utils/error/error_func.dart';
 import 'package:minifood_staff/data/models/user_model.dart';
-import 'package:minifood_staff/data/reponsitories/users_reponsitory.dart';
+import 'package:minifood_staff/data/repositories/users_reponsitory.dart';
 
 class ProfileController extends GetxController {
   final UsersRepositoryImpl _repo = UsersRepositoryImpl.instance;

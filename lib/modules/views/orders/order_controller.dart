@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:minifood_staff/core/utils/error/error_func.dart';
 import 'package:minifood_staff/data/models/orders_model.dart';
-import 'package:minifood_staff/data/reponsitories/order_reponsitory.dart';
+import 'package:minifood_staff/data/repositories/order_reponsitory.dart';
 import 'package:minifood_staff/modules/views/cart/cart_controller.dart';
 
 class OrdersController extends GetxController {

@@ -63,6 +63,8 @@ class CustomDrawer extends StatelessWidget {
 
             // Nút Sign Out
             _buildDrawerItem(Icons.logout, "Sign Out"),
+            //nút hỗ trợ chuyển màn nhắn tin
+            _buildDrawerItem(Icons.support_agent_outlined, "Hỗ Trợ"),
           ],
         ),
       ),
@@ -85,6 +87,9 @@ class CustomDrawer extends StatelessWidget {
           Get.toNamed(RouterName.ORDERS);
         } else if (title == "Mã Giảm Giá") {
           Get.toNamed(RouterName.VOUCHERS);
+        }
+        else if (title == "Hỗ Trợ") {
+          Get.toNamed(RouterName.SUPPORT);
         }
         // else if (title == "Home Page") {
         //   Get.toNamed(Routes.HOME);

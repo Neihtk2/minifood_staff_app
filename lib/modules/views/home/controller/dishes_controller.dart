@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:minifood_staff/data/models/dished_model.dart';
-import 'package:minifood_staff/data/reponsitories/dished_reponsitory.dart';
+import 'package:minifood_staff/data/repositories/dished_reponsitory.dart';
 
 class DishesController extends GetxController {
   final DishedReponsitoryImpl _repo = DishedReponsitoryImpl.instance;

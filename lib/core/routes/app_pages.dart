@@ -14,6 +14,8 @@ import 'package:minifood_staff/modules/views/shipping/bindings/shipping_binding.
 import 'package:minifood_staff/modules/views/shipping/view/shipping_screen.dart';
 import 'package:minifood_staff/modules/views/vouchers/bindings/vouchers_binding.dart';
 import 'package:minifood_staff/modules/views/vouchers/view/vouchers_view.dart';
+import 'package:minifood_staff/modules/views/message/room_list.dart';
+import 'package:minifood_staff/modules/views/message/chat_screen.dart' as Chat;
 
 class AppPages {
   static final pages = [
@@ -52,6 +54,14 @@ class AppPages {
       name: RouterName.VOUCHERS,
       page: () => VouchersListView(),
       binding: VouchersBinding(),
+    ),
+    GetPage(
+      name: RouterName.SUPPORT,
+      page: () => RoomListScreen(),
+    ),
+    GetPage(
+      name: '/chat',
+      page: () => Chat.ChatScreen(userId: 0), // Placeholder userId
     ),
   ];
 }

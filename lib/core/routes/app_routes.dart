@@ -12,4 +12,5 @@ abstract class RouterName {
   static const ORDERS = '/orders';
   static const VOUCHERS = '/vouchers';
   static const SHIPPERHOME = '/shipper';
+  static const SUPPORT = '/rooms';
 }

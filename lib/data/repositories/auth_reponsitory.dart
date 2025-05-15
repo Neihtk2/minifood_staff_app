@@ -19,6 +19,7 @@ class AuthRepository implements AuthRepositoryService {
   @override
   Future<AuthModel?> login(String email, String password) async {
     try {
+      print('Login with email: $email and password: $password');
       final response = await _api.dio.post(
         Endpoints.login,
         data: {'email': email, 'password': password},

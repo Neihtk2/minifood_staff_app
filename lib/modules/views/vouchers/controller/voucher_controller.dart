@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:minifood_staff/data/models/voucher_model.dart';
-import 'package:minifood_staff/data/reponsitories/vouchers_reponsitory.dart';
+import 'package:minifood_staff/data/repositories/vouchers_reponsitory.dart';
 
 class VoucherController extends GetxController {
   final VouchersReponsitoryImpl repo = VouchersReponsitoryImpl.instance;
