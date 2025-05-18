@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "94097261274",
+    "project_id": "server-minifood",
+    "storage_bucket": "server-minifood.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94097261274:android:82fbaf4b0716796b349be3",
+        "android_client_info": {
+          "package_name": "com.example.minifood_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvjkly4dRuZNwdWMIPN_uuerYaZJBCFqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94097261274:android:60067cb04fe9f147349be3",
+        "android_client_info": {
+          "package_name": "com.example.minifood_staff"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvjkly4dRuZNwdWMIPN_uuerYaZJBCFqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

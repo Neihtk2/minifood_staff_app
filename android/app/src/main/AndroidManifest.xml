@@ -19,6 +19,9 @@
              <meta-data
             android:name="VIETMAP_ACCESS_TOKEN"
             android:value="5ce0e35c4e0bdd0373a8532b329869a2330edc4ef4c5b24e" />
+            <meta-data
+                android:name="com.google.firebase.messaging.default_notification_channel_id"
+                android:value="order_channel"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

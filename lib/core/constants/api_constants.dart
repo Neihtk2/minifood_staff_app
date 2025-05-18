@@ -1,7 +1,7 @@
 class Endpoints {
   Endpoints._();
-  // static const String baseUrl = "http://10.0.2.2:5000";
-  static const String baseUrl = "http://192.168.26.104:5000";
+  static const String baseUrl = "http://10.0.2.2:5000";
+  // static const String baseUrl = "http://192.168.26.104:5000";
   // static const String baseWeb = "http://localhost:5000";
   static const String login = '/api/auth/login';
   static const String register = '/api/auth/signup';
@@ -15,6 +15,7 @@ class Endpoints {
   static const String newDish = '/api/dishes/newDish';
   static const String getPendingDelivery = '/api/orders/accept-delivery';
   static const String getAcceptedDelivery = '/api/orders/accepted-delivery';
+  static const String fcm = '/api/users/save-fcm-token';
 
   // User endpoints
   static const String getUserProfile = '/users/profile';

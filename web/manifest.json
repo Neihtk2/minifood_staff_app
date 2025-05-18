@@ -1,6 +1,6 @@
 {
-    "name": "minifood_admin",
-    "short_name": "minifood_admin",
+    "name": "minifood_staff",
+    "short_name": "minifood_staff",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

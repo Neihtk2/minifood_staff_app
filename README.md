@@ -1,4 +1,4 @@
-# minifood_admin
+# minifood_staff
 
 A new Flutter project.
 
