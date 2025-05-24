@@ -24,13 +24,18 @@ class OrdersListView extends StatelessWidget {
           ),
         );
       }
-      return ListView.builder(
-        padding: EdgeInsets.all(8.0.r),
-        itemCount: orders.length,
-        itemBuilder: (context, index) {
-          final order = orders[index];
-          return _orderItemWidget(context, order, controller);
+      return RefreshIndicator(
+        onRefresh: () async {
+          await controller.refreshOrders();
         },
+        child: ListView.builder(
+          padding: EdgeInsets.all(8.0.r),
+          itemCount: orders.length,
+          itemBuilder: (context, index) {
+            final order = orders[index];
+            return _orderItemWidget(context, order, controller);
+          },
+        ),
       );
     });
   }

@@ -40,17 +40,15 @@ class UsersRepositoryImpl implements UsersReponsitory {
   }
 
   @override
-  @override
   Future<Response> updateProfile(UserModel user, {XFile? imageFile}) async {
     final token = box.read(StorageConstants.accessToken);
     try {
       final formMap = Map<String, dynamic>.from(user.toJson());
 
-      // Nếu có ảnh thì thêm vào map
       if (imageFile != null) {
         final file = await MultipartFile.fromFile(
           imageFile.path,
-          filename: 'user_${DateTime.now().millisecondsSinceEpoch}.jpg',
+          filename: 'staff_${DateTime.now().millisecondsSinceEpoch}.jpg',
           contentType: MediaType('image', 'jpeg'),
         );
         formMap['image'] = file;
@@ -61,13 +59,7 @@ class UsersRepositoryImpl implements UsersReponsitory {
       final response = await api.dio.put(
         Endpoints.profile,
         data: formData,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-            // KHÔNG cần set Content-Type thủ công nếu dùng FormData
-            // Dio sẽ tự đặt đúng boundary cho multipart
-          },
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
 
       return response;
@@ -76,57 +68,6 @@ class UsersRepositoryImpl implements UsersReponsitory {
       return e.response!;
     }
   }
-
-  // Future<Response> updateProfile(UserModel user, {XFile? imageFile}) async {
-  //   final token = box.read(StorageConstants.accessToken);
-  //   try {
-  //     FormData formData;
-
-  //     // Nếu có ảnh mới được chọn
-  //     if (imageFile != null) {
-  //       formData = FormData.fromMap({
-  //         ...user.toJson(),
-  //         'image': await MultipartFile.fromFile(
-  //           imageFile.path,
-  //           filename: 'user_${DateTime.now().millisecondsSinceEpoch}.jpg',
-  //           contentType: MediaType('image', 'jpeg'),
-  //         ),
-  //       });
-  //     } else {
-  //       formData = FormData.fromMap(user.toJson());
-  //     }
-
-  //     final response = await api.dio.put(
-  //       Endpoints.profile,
-  //       data: formData,
-  //       options: Options(
-  //         headers: {
-  //           'Authorization': 'Bearer $token',
-  //           'Content-Type': 'multipart/form-data',
-  //         },
-  //       ),
-  //     );
-
-  //     return response;
-  //   } on DioException catch (e) {
-  //     handleError(e);
-  //     return e.response!;
-  //   }
-  // }
-  // Future<Response> updateProfile(UserModel user) async {
-  //   final token = box.read(StorageConstants.accessToken);
-  //   try {
-  //     final response = await api.dio.put(
-  //       Endpoints.profile,
-  //       data: user.toJson(),
-  //       options: Options(headers: {'Authorization': 'Bearer $token'}),
-  //     );
-  //     return response;
-  //   } on DioException catch (e) {
-  //     handleError(e);
-  //     return e.response!;
-  //   }
-  // }
 
   @override
   Future<Response> changePassword(

@@ -22,7 +22,7 @@ class LoginScreen extends GetView<AuthController> {
             children: [
               SizedBox(height: 90.h),
               Text(
-                'Hello Again!',
+                'Đăng nhập',
                 style: TextStyle(
                   fontSize: 26.sp,
                   fontWeight: FontWeight.bold,
@@ -31,7 +31,8 @@ class LoginScreen extends GetView<AuthController> {
               ),
               SizedBox(height: 20.h),
               Text(
-                "Welcome Back You've Been Missed!",
+                "Hãy làm việc chăm chỉ và hiệu quả",
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16.sp,
                   color: Colors.grey,
@@ -39,12 +40,12 @@ class LoginScreen extends GetView<AuthController> {
                 ),
               ),
               SizedBox(height: 40.h),
-              _buildTextField('Email Address', _emailController),
+              _buildTextField('Email', _emailController),
               SizedBox(height: 30.h),
               Row(
                 children: [
                   Text(
-                    "Password",
+                    "Mật khẩu",
                     style: TextStyle(
                       fontSize: 17.sp,
                       fontWeight: FontWeight.bold,
@@ -58,34 +59,10 @@ class LoginScreen extends GetView<AuthController> {
               ),
               const SizedBox(height: 5),
               _buildPasswordField(),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Recovery Password',
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                ),
-              ),
+
               SizedBox(height: 20.h),
               _buildLoginButton(),
-              SizedBox(height: 140.h),
-              RichText(
-                text: TextSpan(
-                  text: "Don't Have An Account? ",
-                  style: TextStyle(color: Colors.black87),
-                  children: [
-                    TextSpan(
-                      text: 'Sign Up For Free',
-                      style: TextStyle(color: Colors.blue),
-                      recognizer:
-                          TapGestureRecognizer()
-                            ..onTap = () => Get.toNamed(RouterName.REGISTER),
-                    ),
-                  ],
-                ),
-              ),
+              SizedBox(height: 20.h),
             ],
           ),
         ),
@@ -140,7 +117,7 @@ class LoginScreen extends GetView<AuthController> {
             horizontal: 20.w,
           ),
           fillColor: Colors.grey[100],
-          hintText: 'Password',
+          hintText: 'Mật khẩu',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30.r),
             borderSide: BorderSide.none,
@@ -184,7 +161,7 @@ class LoginScreen extends GetView<AuthController> {
                   ? Center(child: const CircularProgressIndicator())
                   : Center(
                     child: Text(
-                      'Login',
+                      'Đăng nhập',
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w700,

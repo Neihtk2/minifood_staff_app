@@ -19,20 +19,42 @@ class ShippingDetail extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       }
       if (orders.isEmpty) {
-        return const Center(
-          child: Text(
-            'Không có đơn hàng nào.',
-            style: TextStyle(color: Colors.grey),
+        return Center(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await controller.refreshOrders();
+            },
+            child: SingleChildScrollView(
+              physics:
+                  const AlwaysScrollableScrollPhysics(), // Quan trọng: Cho phép cuộn luôn
+              child: Container(
+                height:
+                    MediaQuery.of(context).size.height *
+                    0.8, // Chiếm 80% chiều cao màn hình
+                alignment: Alignment.center,
+                child: Text(
+                  'Không có đơn hàng nào.',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ),
           ),
         );
       }
-      return ListView.builder(
-        padding: EdgeInsets.all(8.0.r),
-        itemCount: orders.length,
-        itemBuilder: (context, index) {
-          final order = orders[index];
-          return _orderItemWidget(context, order, controller);
+      return RefreshIndicator(
+        onRefresh: () async {
+          await controller.refreshOrders();
         },
+        child: ListView.builder(
+          // shrinkWrap: true,
+          // physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.all(8.0.r),
+          itemCount: orders.length,
+          itemBuilder: (context, index) {
+            final order = orders[index];
+            return _orderItemWidget(context, order, controller);
+          },
+        ),
       );
     });
   }
@@ -75,13 +97,11 @@ class ShippingDetail extends StatelessWidget {
               ),
               SizedBox(height: 8.h),
 
-              // Thông tin khách hàng
               Text("Khách hàng: ${order.customerName}"),
               Text("SĐT: ${order.phone}"),
               Text("Địa chỉ: ${order.deliveryAddress}"),
               SizedBox(height: 8.h),
 
-              // Phương thức thanh toán & Tổng tiền
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -160,7 +180,7 @@ class ShippingDetail extends StatelessWidget {
         value: orderStatus.value,
         onChanged: (String? newStatus) {
           if (newStatus != null && newStatus != orderStatus.value) {
-            orderStatus.value = newStatus; // Cập nhật giá trị trạng thái
+            orderStatus.value = newStatus;
             controller.updateOrders(newStatus, order.id);
           }
         },

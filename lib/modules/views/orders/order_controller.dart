@@ -10,8 +10,8 @@ class OrdersController extends GetxController {
   final OrdersRepositoryImpl _repo = OrdersRepositoryImpl.instance;
   final RxBool isLoading = false.obs;
   final RxString error = ''.obs;
-  final RxList<OrdersModel> getOrdersDelivery = <OrdersModel>[].obs;
-  final RxList<OrdersModel> getAcceptedDelivery = <OrdersModel>[].obs;
+  // final RxList<OrdersModel> getOrdersDelivery = <OrdersModel>[].obs;
+  // final RxList<OrdersModel> getAcceptedDelivery = <OrdersModel>[].obs;
   final RxList<OrdersModel> orders = <OrdersModel>[].obs;
   final RxList<OrdersModel> pending = <OrdersModel>[].obs;
   final RxList<OrdersModel> processing = <OrdersModel>[].obs;
@@ -24,6 +24,10 @@ class OrdersController extends GetxController {
   void onInit() {
     super.onInit();
     getOrders();
+  }
+
+  Future<void> refreshOrders() async {
+    await getOrders();
   }
 
   Future<void> createOrder(
@@ -84,8 +88,6 @@ class OrdersController extends GetxController {
       completed.value = await _repo.getAllOrders('completed');
       cancelled.value = await _repo.getAllOrders('cancelled');
       rejected.value = await _repo.getAllOrders('rejected');
-      // getOrdersDelivery.value = await _repo.getPendingDelivery();
-      // getAcceptedDelivery.value = await _repo.getAcceptedDeliveryOrders();
     } catch (e) {
       handleError(e);
     } finally {

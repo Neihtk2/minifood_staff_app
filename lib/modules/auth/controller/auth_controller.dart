@@ -17,7 +17,7 @@ class AuthController extends GetxController {
   // final Rx<UserModel?> user = Rx<UserModel?>(null);
   final RxBool isLoading = false.obs;
   final RxString error = ''.obs;
-  final RxBool isPasswordHidden = false.obs;
+  final RxBool isPasswordHidden = true.obs;
   final box = GetStorage();
 
   Future<void> login(String email, String password) async {

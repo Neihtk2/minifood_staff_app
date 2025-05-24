@@ -16,6 +16,10 @@ class ShippingController extends GetxController {
     getOrders();
   }
 
+  Future<void> refreshOrders() async {
+    await getOrders();
+  }
+
   Future<void> updateOrders(String? status, String id) async {
     try {
       isLoading.value = true;
